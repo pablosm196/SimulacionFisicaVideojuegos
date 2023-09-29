@@ -8,6 +8,7 @@
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
 #include "Particle.h"
+#include "Projectile.h"
 
 #include <iostream>
 
@@ -30,8 +31,8 @@ PxPvd*                  gPvd        = NULL;
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
-Particle* particle;
-
+//Particle* particle;
+std::vector<Projectile*> v;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -57,7 +58,7 @@ void initPhysics(bool interactive)
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
-	particle = new Particle(Vector3(10, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0));
+	//particle = new Particle(Vector3(10, 0, 0), Vector3(0, 0, 0), Vector3(0, 0, 0), 0.998f);
 }
 
 
@@ -70,14 +71,19 @@ void stepPhysics(bool interactive, double t)
 
 	gScene->simulate(t);
 	gScene->fetchResults(true);
-	particle->integrate(t);
+	//particle->integrate(t);
+	//p->integrate(t);
+	for (int i = 0; i < v.size(); ++i)
+		v[i]->integrate(t);
 }
 
 // Function to clean data
 // Add custom code to the begining of the function
 void cleanupPhysics(bool interactive)
 {
-	delete particle;
+	//delete particle;
+	for (int i = 0; i < v.size(); ++i)
+		delete v[i];
 	PX_UNUSED(interactive);
 
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
@@ -101,8 +107,15 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 	//case 'B': break;
 	//case ' ':	break;
-	case ' ':
+	case 'P': {
+		Projectile * p = new Projectile(Vector3(GetCamera()->getDir().x * 330, 0, 0), Vector3(GetCamera()->getDir().x * 10, 0, 0), GetCamera()->getTransform().p, Vector3(0, -9.8f, 0), 0.998f, 0.2f);
+		v.push_back(p);
+		break;
+	}
+	case 'C':
 	{
+		Projectile* p = new Projectile(Vector3(GetCamera()->getDir().x * 330, 0, 0), Vector3(GetCamera()->getDir().x * 10, 0, 0), GetCamera()->getTransform().p, Vector3(0, -9.8f, 0), 0.998f, 0.2f);
+		v.push_back(p)
 		break;
 	}
 	default:

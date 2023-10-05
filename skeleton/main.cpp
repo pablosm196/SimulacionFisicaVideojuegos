@@ -112,12 +112,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		v.push_back(p);
 		break;
 	}
-	case 'C':
-	{
-		Projectile* p = new Projectile(Vector3(GetCamera()->getDir().x * 330, 0, 0), Vector3(GetCamera()->getDir().x * 10, 0, 0), GetCamera()->getTransform().p, Vector3(0, -9.8f, 0), 0.998f, 0.2f);
-		v.push_back(p);
-		break;
-	}
 	default:
 		break;
 	}

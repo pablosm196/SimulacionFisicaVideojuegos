@@ -1,6 +1,7 @@
 #pragma once
 #include<string>
 #include <list>
+#include <random>
 #include "Particle.h"
 class ParticleGenerator
 {
@@ -26,6 +27,10 @@ public:
 };
 
 class UniformParticleGenerator : public ParticleGenerator {
-
+private:
+	Vector3 _vel_width, _pos_width;
+public:
+	UniformParticleGenerator(Vector3 pos, Vector3 vel);
+	std::list<Particle*> generateParticles() override;
 };
 

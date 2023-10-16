@@ -10,14 +10,15 @@ Particle::Particle()
 	renderItem = new RenderItem(CreateShape(PxSphereGeometry(10)), Vector4(255, 0, 0, 1));
 }
 
-Particle::Particle(Vector3 v, Vector3 p, Vector3 a, float d, float t)
+Particle::Particle(Vector3 v, Vector3 p, Vector3 a, float d, float t, Vector4 col)
 {
 	vel = v;
 	pose = PxTransform(p);
 	acceleration = a;
 	damping = d;
 	lifespan = t;
-	renderItem = new RenderItem(CreateShape(PxSphereGeometry(10)), &pose, Vector4(255, 0, 0, 1));
+	color = col;
+	renderItem = new RenderItem(CreateShape(PxSphereGeometry(10)), &pose, color);
 }
 
 Particle::~Particle()

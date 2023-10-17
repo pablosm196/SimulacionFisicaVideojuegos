@@ -29,6 +29,7 @@ public:
 class UniformParticleGenerator : public ParticleGenerator {
 private:
 	Vector3 _vel_width, _pos_width;
+	std::uniform_real_distribution<> dist{ -1, 1 };
 public:
 	UniformParticleGenerator(Vector3 pos, Vector3 vel);
 	std::list<Particle*> generateParticles() override;

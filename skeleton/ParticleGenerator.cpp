@@ -17,6 +17,7 @@ std::list<Particle*> GaussianParticleGenerator::generateParticles()
 
 UniformParticleGenerator::UniformParticleGenerator(Vector3 pos, Vector3 vel)
 {
+
 }
 
 std::list<Particle*> UniformParticleGenerator::generateParticles()

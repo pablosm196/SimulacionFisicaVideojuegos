@@ -11,6 +11,7 @@ protected:
 	double _generator_probability;
 	int _num_particles;
 	Particle* _model;
+	std::default_random_engine dre;
 public:
 	void setParticle(Particle* model);
 	virtual std::list<Particle*> generateParticles() = 0;
@@ -31,7 +32,7 @@ private:
 	Vector3 _vel_width, _pos_width;
 	std::uniform_real_distribution<> dist{ -1, 1 };
 public:
-	UniformParticleGenerator(Vector3 pos, Vector3 vel);
+	UniformParticleGenerator(Vector3 pos, Vector3 vel, int n);
 	std::list<Particle*> generateParticles() override;
 };
 

@@ -18,7 +18,7 @@ Particle::Particle(Vector3 v, Vector3 p, Vector3 a, float d, float t, Vector4 co
 	damping = d;
 	lifespan = t;
 	color = col;
-	renderItem = new RenderItem(CreateShape(PxSphereGeometry(10)), &pose, color);
+	renderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &pose, color);
 }
 
 Particle::~Particle()

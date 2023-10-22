@@ -4,11 +4,19 @@
 #include"ParticleGenerator.h"
 class ParticleSystem
 {
+	const float NEW_PARTICLE_TIME = 0.0f;
 private:
 	std::list<Particle*> _particles;
 	std::list<ParticleGenerator*> _particle_generators;
+	float newParticle, time;
 public:
-	ParticleSystem() : _particles(0), _particle_generators(0) {};
+	ParticleSystem() : _particles(0), _particle_generators(0), newParticle(0.0f), time(0.0f) {
+		UniformParticleGenerator* ug = new UniformParticleGenerator(Vector3(0, 0, 0), Vector3(0, 0, 0), 1);
+		_particle_generators.push_back(ug);
+		/*GaussianParticleGenerator* gg = new GaussianParticleGenerator(Vector3(0, 0, 0), Vector3(0, 0, 0), 1, 1);
+		_particle_generators.push_back(gg);*/
+	};
+	~ParticleSystem();
 	void update(double t);
 	ParticleGenerator* getParticleGenerator(std::string name);
 	void generateFireworkSystem();

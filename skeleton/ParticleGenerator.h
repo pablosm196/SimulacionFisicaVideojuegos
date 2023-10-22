@@ -22,8 +22,9 @@ class GaussianParticleGenerator : public ParticleGenerator
 protected:
 	Vector3 std_dev_pos, std_dev_vel;
 	double std_dev_t;
+	std::normal_distribution<> dist{ 0, 0.5 };
 public:
-	GaussianParticleGenerator(Vector3 pos, Vector3 vel, double t);
+	GaussianParticleGenerator(Vector3 pos, Vector3 vel, double t, int n);
 	std::list<Particle*> generateParticles() override;
 };
 

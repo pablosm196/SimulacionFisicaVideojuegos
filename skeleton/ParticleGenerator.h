@@ -3,6 +3,7 @@
 #include <list>
 #include <random>
 #include "Particle.h"
+#include "Firework.h"
 class ParticleGenerator
 {
 protected:
@@ -35,5 +36,15 @@ private:
 public:
 	UniformParticleGenerator(Vector3 pos, Vector3 vel, int n);
 	std::list<Particle*> generateParticles() override;
+};
+
+class FireworkGenerator : public ParticleGenerator {
+private:
+	Vector3 _mean_ac;
+	std::normal_distribution<> dist{ -1, 1 };
+public:
+	FireworkGenerator(Vector3 pos, Vector3 vel, Vector3 ac, int n);
+	std::list<Particle*> generateParticles() override;
+	std::list<Particle*> generateParticlesFromFireworks(Firework* parent);
 };
 

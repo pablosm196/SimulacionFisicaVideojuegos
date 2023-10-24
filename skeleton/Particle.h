@@ -13,10 +13,12 @@ protected:
 	Vector4 color;
 public:
 	Particle();
-	Particle(Vector3 v, Vector3 p, Vector3 a, float d, float t = 5000.0f, Vector4 col = {255, 0, 0, 1});
+	Particle(Vector3 v, Vector3 p, Vector3 a, float d, float t = 5.0f, Vector4 col = {255, 0, 0, 1});
 	~Particle();
 
-	void integrate(double t);
-	bool checkTime();
+	virtual void integrate(double t);
+	virtual bool checkTime();
+	inline Vector3 getPos() { return pose.p; }
+	inline Vector3 getVel() { return vel; }
 };
 

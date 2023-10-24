@@ -10,19 +10,43 @@ ParticleSystem::~ParticleSystem()
 		delete(*i);
 		i = _particle_generators.erase(i);
 	}
+	for (auto i = _fireworks.begin(); i != _fireworks.end();) {
+		delete(*i);
+		i = _fireworks.erase(i);
+	}
+	
+	delete _firework_generator;
 }
 
 void ParticleSystem::update(double t)
 {
 	for (auto i = _particles.begin(); i != _particles.end();) {
 		(*i)->integrate(t);
+
 		if ((*i)->checkTime()) {
 			delete (*i);
 			i = _particles.erase(i);
 		}
-		else i++;
+		else ++i;
 	}
+
+	for (auto i = _fireworks.begin(); i != _fireworks.end();) {
+		(*i)->integrate(t);
+
+		if ((*i)->checkTime()) {
+			std::list<Particle*> l = _firework_generator->generateParticlesFromFireworks((*i));
+			for (Particle* p : l)
+				_particles.push_back(p);
+
+			delete(*i);
+			i = _fireworks.erase(i);
+		}
+		else ++i;
+	}
+
 	time += t;
+	timeFirework += t;
+
 	if (time >= newParticle) {
 		newParticle += NEW_PARTICLE_TIME;
 		for (ParticleGenerator* p : _particle_generators) {
@@ -30,6 +54,11 @@ void ParticleSystem::update(double t)
 			for (Particle* np : l)
 				_particles.push_back(np);
 		}
+	}
+
+	if (timeFirework >= newFirework) {
+		newFirework += NEW_FIREWORK_TIME;
+		generateFireworkSystem();
 	}
 }
 
@@ -40,4 +69,7 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(std::string name)
 
 void ParticleSystem::generateFireworkSystem()
 {
+		std::list<Particle*> l = _firework_generator->generateParticles();
+		for (Particle* nf : l)
+			_fireworks.push_back((Firework*)nf);
 }

@@ -42,6 +42,8 @@ class FireworkGenerator : public ParticleGenerator {
 private:
 	Vector3 _mean_ac;
 	std::normal_distribution<> dist{ -1, 1 };
+	std::list<Particle*> generateRandom(Firework* parent);
+	std::list<Particle*> generateCircle(Firework* parent);
 public:
 	FireworkGenerator(Vector3 pos, Vector3 vel, Vector3 ac, int n);
 	std::list<Particle*> generateParticles() override;

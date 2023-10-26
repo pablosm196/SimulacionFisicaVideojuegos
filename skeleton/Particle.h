@@ -20,5 +20,6 @@ public:
 	virtual bool checkTime();
 	inline Vector3 getPos() { return pose.p; }
 	inline Vector3 getVel() { return vel; }
+	inline Vector4 getColor() { return color; }
 };
 

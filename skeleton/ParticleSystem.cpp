@@ -36,7 +36,7 @@ void ParticleSystem::update(double t)
 		if ((*i)->checkTime()) {
 			std::list<Particle*> l = _firework_generator->generateParticlesFromFireworks((*i));
 			for (Particle* p : l)
-				_particles.push_back(p);
+				_fireworks.push_back((Firework*)p);
 
 			delete(*i);
 			i = _fireworks.erase(i);

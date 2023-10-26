@@ -4,10 +4,13 @@
 #include<random>
 class Firework : public Particle
 {
+public:
+	static enum Firework_type{RANDOM, CIRCLE};
+	Firework(Vector3 v, Vector3 p, Vector3 a, float d, Firework_type ft, float t = 5000.0f, Vector4 col = { 255, 0, 0, 1 }, int n = 1);
+	inline int getNumHijos() { return nHijos; }
+	inline Firework_type getType() { return type; }
 protected:
 	int nHijos;
-public:
-	Firework(Vector3 v, Vector3 p, Vector3 a, float d, float t = 5000.0f, Vector4 col = { 255, 0, 0, 1 }, int n = 1);
-	inline int getNumHijos() { return nHijos; }
+	Firework_type type;
 };
 

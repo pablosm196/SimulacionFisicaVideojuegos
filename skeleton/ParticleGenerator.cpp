@@ -35,7 +35,7 @@ std::list<Particle*> GaussianParticleGenerator::generateParticles()
 		g = rand() % 255 / 255.0f;
 		b = rand() % 255 / 255.0f;
 
-		Particle* newParticle = new Particle(vel, pos, Vector3(0, -9.8f, 0), 0.998, 2.0f, Vector4(r, g, b, 1));
+		Particle* newParticle = new Particle(vel, pos, 0.998f, 1, 2.0f, Vector4(r, g, b, 1));
 		particles.push_back(newParticle);
 	}
 
@@ -69,7 +69,7 @@ std::list<Particle*> UniformParticleGenerator::generateParticles()
 		g = rand() % 255 / 255.0f;
 		b = rand() % 255 / 255.0f;
 
-		Particle* newParticle = new Particle(vel, pos, Vector3(0, -9.8f, 0), 0.998, 2.0f, Vector4(r, g, b, 1));
+		Particle* newParticle = new Particle(vel, pos, 0.998f, 1, 2.0f, Vector4(r, g, b, 1));
 		particles.push_back(newParticle);
 	}
 
@@ -89,7 +89,7 @@ std::list<Particle*> FireworkGenerator::generateRandom(Firework* parent)
 		r = rand() % 255 / 255.0f;
 		g = rand() % 255 / 255.0f;
 		b = rand() % 255 / 255.0f;
-		particles.push_back(new Firework(vel, parent->getPos(), _mean_ac, 0.998f, parent->getType(), 2.0f, Vector4(r, g, b, 1), 2));
+		particles.push_back(new Firework(vel, parent->getPos(), 0.998f, 1, parent->getType(), 2.0f, Vector4(r, g, b, 1), 2));
 	}
 	return particles;
 }
@@ -102,7 +102,7 @@ std::list<Particle*> FireworkGenerator::generateCircle(Firework* parent)
 	for (int i = 0; i < parent->getNumHijos(); ++i) {
 		angle = i * 360.0f / parent->getNumHijos() * 3.14f / 180;
 		pos = parent->getPos() + Vector3(r * cos(angle), r * sin(angle), 0);
-		list.push_back(new Firework(Vector3(0, 0, 0), pos, _mean_ac, 0.998f, Firework::CIRCLE, 2.0f, parent->getColor(), parent->getNumHijos()));
+		list.push_back(new Firework(Vector3(0, 0, 0), pos, 0.998f, 1, Firework::CIRCLE, 2.0f, parent->getColor(), parent->getNumHijos()));
 	}
 	return list;
 }
@@ -134,7 +134,7 @@ std::list<Particle*> FireworkGenerator::generateParticles()
 		r = rand() % 255 / 255.0f;
 		g = rand() % 255 / 255.0f;
 		b = rand() % 255 / 255.0f;
-		fireworks.push_back(new Firework(vel, pos, _mean_ac, 0.998f, Firework::CIRCLE, 2.0f, Vector4(r, g, b, 1), 5));
+		fireworks.push_back(new Firework(vel, pos, 0.998f, 1, Firework::CIRCLE, 2.0f, Vector4(r, g, b, 1), 5));
 	}
 	return fireworks;
 }

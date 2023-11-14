@@ -20,6 +20,7 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::update(double t)
 {
+	ForceRegistry->updateForces(t);
 	for (auto i = _particles.begin(); i != _particles.end();) {
 		(*i)->integrate(t);
 
@@ -51,8 +52,10 @@ void ParticleSystem::update(double t)
 		newParticle += NEW_PARTICLE_TIME;
 		for (ParticleGenerator* p : _particle_generators) {
 			std::list<Particle*> l = p->generateParticles();
-			for (Particle* np : l)
+			for (Particle* np : l) {
+				ForceRegistry->addRegistry(Gravity, np);
 				_particles.push_back(np);
+			}
 		}
 	}
 
@@ -70,6 +73,8 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(std::string name)
 void ParticleSystem::generateFireworkSystem()
 {
 		std::list<Particle*> l = _firework_generator->generateParticles();
-		for (Particle* nf : l)
+		for (Particle* nf : l) {
+			ForceRegistry->addRegistry(Gravity, nf);
 			_fireworks.push_back((Firework*)nf);
+		}
 }

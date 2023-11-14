@@ -3,6 +3,8 @@
 #include "Particle.h"
 #include"ParticleGenerator.h"
 #include"Firework.h"
+#include "ParticleForceRegistry.h"
+#include "ForceGenerator.h"
 class ParticleSystem
 {
 	const float NEW_PARTICLE_TIME = 2.0f;
@@ -13,6 +15,8 @@ private:
 	std::list<ParticleGenerator*> _particle_generators;
 	FireworkGenerator* _firework_generator;
 	float newParticle, time, newFirework, timeFirework;
+	ParticleForceRegistry* ForceRegistry;
+	GravityForceGenerator* Gravity;
 public:
 	ParticleSystem() : _particles(0), _particle_generators(0), newParticle(0.0f), time(0.0f), timeFirework(0.0f), newFirework(0.0f) {
 		/*UniformParticleGenerator* ug = new UniformParticleGenerator(Vector3(0, 0, 0), Vector3(0, 0, 0), 1);
@@ -20,6 +24,9 @@ public:
 		/*GaussianParticleGenerator* gg = new GaussianParticleGenerator(Vector3(0, 0, 0), Vector3(0, 0, 0), 1, 1);
 		_particle_generators.push_back(gg);*/
 		_firework_generator = new FireworkGenerator(Vector3(0, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 0), 1);
+
+		ForceRegistry = new ParticleForceRegistry();
+		Gravity = new GravityForceGenerator(Vector3(0, -9.8, 0));
 	};
 	~ParticleSystem();
 	void update(double t);

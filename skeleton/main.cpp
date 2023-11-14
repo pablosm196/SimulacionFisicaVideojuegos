@@ -10,7 +10,6 @@
 #include "Particle.h"
 #include "Projectile.h"
 #include "ParticleSystem.h"
-
 #include <iostream>
 
 std::string display_text = "This is a test";

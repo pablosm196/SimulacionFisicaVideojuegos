@@ -113,8 +113,9 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	//case 'B': break;
 	//case ' ':	break;
 	case 'P': {
-		Projectile * p = new Projectile(GetCamera()->getDir() * 330, GetCamera()->getDir() * 10, GetCamera()->getTransform().p, Vector3(0, -9.8f, 0), 0.998f, 0.2f);
-		v.push_back(p);
+		/*Projectile* p = new Projectile(GetCamera()->getDir() * 330, GetCamera()->getDir() * 10, GetCamera()->getTransform().p, Vector3(0, -9.8f, 0), 0.998f, 0.2f);
+		v.push_back(p);*/
+		Psystem->generateExplosion();
 		break;
 	}
 	default:

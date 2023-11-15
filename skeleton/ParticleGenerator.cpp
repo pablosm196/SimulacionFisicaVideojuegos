@@ -130,11 +130,13 @@ std::list<Particle*> FireworkGenerator::generateParticles()
 		vel.x = _mean_vel.x + dist(dre) * 10;
 		vel.y = _mean_vel.y + dist(dre);
 		vel.z = _mean_vel.z + dist(dre) * 10;
+	
+		vel = Vector3(0, 0, 0);
 
 		r = rand() % 255 / 255.0f;
 		g = rand() % 255 / 255.0f;
 		b = rand() % 255 / 255.0f;
-		fireworks.push_back(new Firework(vel, pos, 0.998f, 1, Firework::CIRCLE, 2.0f, Vector4(r, g, b, 1), 5));
+		fireworks.push_back(new Firework(vel, pos, 0.998f, 1, Firework::CIRCLE, 100.0f, Vector4(r, g, b, 1), 5));
 	}
 	return fireworks;
 }

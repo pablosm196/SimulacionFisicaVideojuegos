@@ -17,6 +17,8 @@ private:
 	float newParticle, time, newFirework, timeFirework;
 	ParticleForceRegistry* ForceRegistry;
 	GravityForceGenerator* Gravity;
+	TorbellinoGenerator* Wind;
+	ExplosionGenerator* Explosion;
 public:
 	ParticleSystem() : _particles(0), _particle_generators(0), newParticle(0.0f), time(0.0f), timeFirework(0.0f), newFirework(0.0f) {
 		/*UniformParticleGenerator* ug = new UniformParticleGenerator(Vector3(0, 0, 0), Vector3(0, 0, 0), 1);
@@ -27,10 +29,13 @@ public:
 
 		ForceRegistry = new ParticleForceRegistry();
 		Gravity = new GravityForceGenerator(Vector3(0, -9.8, 0));
+		Wind = new TorbellinoGenerator(Vector3(0, 0, 0), Vector3(10, 0, 0), 20, 1, 1);
+		Explosion = new ExplosionGenerator(Vector3(0, 0, 0), Vector3(5, 5, 5), 5000, 2.0f);
 	};
 	~ParticleSystem();
 	void update(double t);
 	ParticleGenerator* getParticleGenerator(std::string name);
 	void generateFireworkSystem();
+	void generateExplosion();
 };
 

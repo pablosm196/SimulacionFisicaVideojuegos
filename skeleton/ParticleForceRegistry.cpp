@@ -3,7 +3,7 @@
 void ParticleForceRegistry::updateForces(double t)
 {
 	for (auto it = begin(); it != end(); ++it) {
-		it->first->updateForce(it->second);
+		it->first->updateForce(it->second, t);
 	}
 }
 

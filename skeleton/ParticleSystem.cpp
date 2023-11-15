@@ -16,11 +16,19 @@ ParticleSystem::~ParticleSystem()
 	}
 	
 	delete _firework_generator;
+	delete Gravity;
+	delete Wind;
+	delete Explosion;
 }
 
 void ParticleSystem::update(double t)
 {
+	if(Explosion->getActive())
+		Explosion->updateTime(t);
+
 	ForceRegistry->updateForces(t);
+
+	//Borrar partículas
 	for (auto i = _particles.begin(); i != _particles.end();) {
 		(*i)->integrate(t);
 
@@ -31,13 +39,17 @@ void ParticleSystem::update(double t)
 		else ++i;
 	}
 
+	//Generar fireworks a partir de fireworks
 	for (auto i = _fireworks.begin(); i != _fireworks.end();) {
 		(*i)->integrate(t);
 
 		if ((*i)->checkTime()) {
 			std::list<Particle*> l = _firework_generator->generateParticlesFromFireworks((*i));
-			for (Particle* p : l)
+			for (Particle* p : l) {
 				_fireworks.push_back((Firework*)p);
+				/*ForceRegistry->addRegistry(Gravity, p);
+				ForceRegistry->addRegistry(Wind, p);*/
+			}
 
 			delete(*i);
 			i = _fireworks.erase(i);
@@ -48,17 +60,20 @@ void ParticleSystem::update(double t)
 	time += t;
 	timeFirework += t;
 
+	 //Generar nuevas partículas
 	if (time >= newParticle) {
 		newParticle += NEW_PARTICLE_TIME;
 		for (ParticleGenerator* p : _particle_generators) {
 			std::list<Particle*> l = p->generateParticles();
 			for (Particle* np : l) {
-				ForceRegistry->addRegistry(Gravity, np);
+				/*ForceRegistry->addRegistry(Gravity, np);
+				ForceRegistry->addRegistry(Wind, np);*/
 				_particles.push_back(np);
 			}
 		}
 	}
 
+	//Generar nuevos fireworks
 	if (timeFirework >= newFirework) {
 		newFirework += NEW_FIREWORK_TIME;
 		generateFireworkSystem();
@@ -74,7 +89,21 @@ void ParticleSystem::generateFireworkSystem()
 {
 		std::list<Particle*> l = _firework_generator->generateParticles();
 		for (Particle* nf : l) {
-			ForceRegistry->addRegistry(Gravity, nf);
+			/*ForceRegistry->addRegistry(Gravity, nf);
+			ForceRegistry->addRegistry(Wind, nf);*/
 			_fireworks.push_back((Firework*)nf);
 		}
+}
+
+void ParticleSystem::generateExplosion()
+{
+	Explosion->setActive();
+
+	for (Particle* p : _particles) {
+		ForceRegistry->addRegistry(Explosion, p);
+	}
+
+	for (Particle* p : _fireworks) {
+		ForceRegistry->addRegistry(Explosion, p);
+	}
 }

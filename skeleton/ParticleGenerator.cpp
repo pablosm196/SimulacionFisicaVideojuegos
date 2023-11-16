@@ -62,14 +62,14 @@ std::list<Particle*> UniformParticleGenerator::generateParticles()
 		pos.z = _pos_width.z + dist(dre) * 10;
 
 		vel.x = _vel_width.x + dist(dre) * 10;
-		vel.y = _vel_width.y + dist(dre);
+		vel.y = _vel_width.y + dist(dre) * 10;
 		vel.z = _vel_width.z + dist(dre) * 10;
 
 		r = rand() % 255 / 255.0f;
 		g = rand() % 255 / 255.0f;
 		b = rand() % 255 / 255.0f;
 
-		Particle* newParticle = new Particle(vel, pos, 0.998f, 1, 2.0f, Vector4(r, g, b, 1));
+		Particle* newParticle = new Particle(vel, pos, 0.998f, 1, 5.0f, Vector4(r, g, b, 1));
 		particles.push_back(newParticle);
 	}
 

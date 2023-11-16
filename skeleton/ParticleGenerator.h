@@ -12,9 +12,12 @@ protected:
 	double _generator_probability;
 	int _num_particles;
 	Particle* _model;
+	bool active = false;
 	std::default_random_engine dre;
 public:
 	void setParticle(Particle* model);
+	inline bool getActive() { return active; }
+	inline void setActive(bool a) { active = a; }
 	virtual std::list<Particle*> generateParticles() = 0;
 };
 
@@ -32,7 +35,7 @@ public:
 class UniformParticleGenerator : public ParticleGenerator {
 private:
 	Vector3 _vel_width, _pos_width;
-	std::uniform_real_distribution<> dist{ -1, 1 };
+	std::uniform_real_distribution<> dist{ -0.25f, 0.25f };
 public:
 	UniformParticleGenerator(Vector3 pos, Vector3 vel, int n);
 	std::list<Particle*> generateParticles() override;

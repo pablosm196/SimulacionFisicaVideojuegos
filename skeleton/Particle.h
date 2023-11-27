@@ -12,8 +12,9 @@ protected:
 	RenderItem* renderItem;
 	Vector4 color;
 public:
+	enum shape { SPHERE, BOX };
 	Particle();
-	Particle(Vector3 v, Vector3 p, float d, float mass, float t = 5.0f, Vector4 col = {255, 0, 0, 1});
+	Particle(Vector3 v, Vector3 p, float d, float mass, float t = 5.0f, Vector4 col = {255, 0, 0, 1}, shape s = SPHERE);
 	~Particle();
 
 	virtual void integrate(double t);

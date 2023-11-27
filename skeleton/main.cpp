@@ -34,6 +34,7 @@ ContactReportCallback gContactReportCallback;
 //Particle* particle;
 std::vector<Projectile*> v;
 ParticleSystem* Psystem;
+bool torbellino, wind, gravity;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -61,6 +62,9 @@ void initPhysics(bool interactive)
 	gScene = gPhysics->createScene(sceneDesc);
 	//particle = new Particle(Vector3(10, 0, 0), Vector3(0, 0, 0), Vector3(0, -9.8f, 0), 0.998f);
 	Psystem = new ParticleSystem();
+	torbellino = false;
+	wind = false;
+	gravity = false;
 }
 
 
@@ -108,14 +112,29 @@ void keyPress(unsigned char key, const PxTransform& camera)
 {
 	PX_UNUSED(camera);
 
-	switch(toupper(key))
+	switch (toupper(key))
 	{
-	//case 'B': break;
-	//case ' ':	break;
-	case 'P': {
+		//case 'B': break;
+		//case ' ':	break;
+	case 'E': {
 		/*Projectile* p = new Projectile(GetCamera()->getDir() * 330, GetCamera()->getDir() * 10, GetCamera()->getTransform().p, Vector3(0, -9.8f, 0), 0.998f, 0.2f);
 		v.push_back(p);*/
 		Psystem->generateExplosion();
+		break;
+	}
+	case 'T': {
+		torbellino = !torbellino;
+		Psystem->setTorbellino(torbellino);
+		break;
+	}
+	case 'V': {
+		wind = !wind;
+		Psystem->setWind(wind);
+		break;
+	}
+	case 'G': {
+		gravity = !gravity;
+		Psystem->setGravity(gravity);
 		break;
 	}
 	default:

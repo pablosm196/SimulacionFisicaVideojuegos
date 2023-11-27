@@ -41,3 +41,12 @@ void ExplosionGenerator::updateForce(Particle* p, double t)
 			p->addForce(force);
 	}
 }
+
+void SpringForceGenerator::updateForce(Particle* p, double t)
+{
+	Vector3 distance = other->getPos() - p->getPos();
+
+	float direction = distance.normalize() - resting_length;
+
+	p->addForce(distance * direction * k);
+}

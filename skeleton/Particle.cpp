@@ -11,7 +11,7 @@ Particle::Particle()
 	force = Vector3(0, 0, 0);
 }
 
-Particle::Particle(Vector3 v, Vector3 p, float mass, float d, float t, Vector4 col)
+Particle::Particle(Vector3 v, Vector3 p, float mass, float d, float t, Vector4 col, shape s)
 {
 	vel = v;
 	pose = PxTransform(p);
@@ -19,7 +19,10 @@ Particle::Particle(Vector3 v, Vector3 p, float mass, float d, float t, Vector4 c
 	Imass = mass;
 	lifespan = t;
 	color = col;
-	renderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &pose, color);
+	if(s == SPHERE)
+		renderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &pose, color);
+	else if(s == BOX)
+		renderItem = new RenderItem(CreateShape(PxBoxGeometry(1, 1, 1)), &pose, color);
 	force = Vector3(0, 0, 0);
 }
 

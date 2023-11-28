@@ -62,6 +62,7 @@ protected:
 	Particle* other;
 public:
 	SpringForceGenerator(float _k, float resting, Particle* p) : k(_k), resting_length(resting), other(p) {};
+	virtual ~SpringForceGenerator() = default;
 	void updateForce(Particle* p, double t) override;
 	inline void setK(float _k) { k = _k; }
 };
@@ -71,7 +72,13 @@ public:
 	AnchoredSpring(float _k, float resting, Vector3 position) : SpringForceGenerator(_k, resting, nullptr) {
 		other = new Particle({ 0, 0, 0 }, position, 0.998f, 0, 1000, { 0, 0, 0, 1 }, Particle::BOX);
 	}
-	~AnchoredSpring() { delete other; }
+	virtual ~AnchoredSpring() { delete other; }
+};
+
+class ElasticRubber : public SpringForceGenerator {
+public:
+	ElasticRubber(float _k, float resting, Particle* p) : SpringForceGenerator(_k, resting, p) {};
+	void updateForce(Particle* p, double t) override;
 };
 
 

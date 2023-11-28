@@ -20,22 +20,21 @@ private:
 	TorbellinoGenerator* Torbellino;
 	WindGenerator* Wind;
 	ExplosionGenerator* Explosion;
+	AnchoredSpring* muelle;
 
 	void generateSpringDemo();
 public:
 	ParticleSystem() : _particles(0), _particle_generators(0), newParticle(0.0f), time(0.0f), timeFirework(0.0f), newFirework(0.0f) {
-		/**/UniformParticleGenerator* ug = new UniformParticleGenerator(Vector3(0, 0, 0), Vector3(0, 10, 0), 5);
+		UniformParticleGenerator* ug = new UniformParticleGenerator(Vector3(0, 0, 0), Vector3(0, 10, 0), 5);
 		_particle_generators.push_back(ug);
-		/**/GaussianParticleGenerator* gg = new GaussianParticleGenerator(Vector3(0, 0, 0), Vector3(0, 0, 0), 1, 1);
+		GaussianParticleGenerator* gg = new GaussianParticleGenerator(Vector3(0, 0, 0), Vector3(0, 0, 0), 1, 1);
 		_particle_generators.push_back(gg);
 		_firework_generator = new FireworkGenerator(Vector3(0, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 0), 1);
-
-		//ug->setActive(true);
 
 		ForceRegistry = new ParticleForceRegistry();
 		Gravity = new GravityForceGenerator(Vector3(0, -9.8, 0));
 		Torbellino = new TorbellinoGenerator(Vector3(0, 0, 0), Vector3(10, 0, 0), 20, 5, 4);
-		Wind = new WindGenerator(Vector3(0, 0, 0), Vector3(-100, 0, 70), 10.0f, 0.0f);
+		Wind = new WindGenerator(Vector3(0, 0, 0), Vector3(0, 0, 100), 100.0f, 1.0f);
 		Explosion = new ExplosionGenerator(Vector3(0, 0, 0), Vector3(100, 100, 100), 5000, 2.0f);
 
 		generateSpringDemo();
@@ -48,5 +47,6 @@ public:
 	void setGravity(bool g);
 	void setTorbellino(bool t);
 	void setWind(bool w);
+	inline void setKMuelle(float k) { muelle->setK(k); }
 };
 

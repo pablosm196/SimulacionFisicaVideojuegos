@@ -2,20 +2,33 @@
 
 void ParticleSystem::generateSpringDemo()
 {
-	/*Particle* p1 = new Particle({0, 0, 0}, {10, 0, 0}, 0.998f, 2, 1000);
-	Particle* p2 = new Particle({ 0, 0, 0 }, { -10, 0, 0 }, 0.998f, 2, 1000);
+	/**/Particle* p1 = new Particle({0, 0, 0}, {10, 0, 0}, 0.998f, 1, 1000);
+	Particle* p2 = new Particle({ 0, 0, 0 }, { -10, 0, 0 }, 0.998f, 1, 1000, {0, 0, 255, 1});
 
-	SpringForceGenerator* f1 = new SpringForceGenerator(1, 10, p2);
+	//SpringForceGenerator* f1 = new SpringForceGenerator(1, 10, p2);
+	ElasticRubber* f1 = new ElasticRubber(5, 10, p2);
 	ForceRegistry->addRegistry(f1, p1);
-	SpringForceGenerator* f2 = new SpringForceGenerator(1, 10, p1);
+	ForceRegistry->addRegistry(Gravity, p1);
+	ForceRegistry->addRegistry(Wind, p1);
+
+	//SpringForceGenerator* f2 = new SpringForceGenerator(1, 10, p1);
+	ElasticRubber* f2 = new ElasticRubber(5, 10, p1);
 	ForceRegistry->addRegistry(f2, p2);
-	_particles.push_back(p1);
-	_particles.push_back(p2);*/
+	ForceRegistry->addRegistry(Gravity, p2);
+	//ForceRegistry->addRegistry(Wind, p2);
 
-	Particle* p1 = new Particle({ 0, 0, 0 }, { -10, 0, 0 }, 0.998f, 2, 1000);
-	AnchoredSpring* f1 = new AnchoredSpring(1, 10, { 10, 0, 0 });
-	ForceRegistry->addRegistry(f1, p1);
 	_particles.push_back(p1);
+	_particles.push_back(p2);
+
+	/**/Particle* p3 = new Particle({0, 0, 0}, {20, -5, 0}, 0.998f, 1, 1000);
+	muelle = new AnchoredSpring(10, 10, { 20, 10, 0 });
+	ForceRegistry->addRegistry(muelle, p3);
+
+	ForceRegistry->addRegistry(Gravity, p3);
+	ForceRegistry->addRegistry(Wind, p3);
+	ForceRegistry->addRegistry(Explosion, p3);
+
+	_particles.push_back(p3);
 }
 
 ParticleSystem::~ParticleSystem()
@@ -38,6 +51,7 @@ ParticleSystem::~ParticleSystem()
 	delete Wind;
 	delete Torbellino;
 	delete Explosion;
+	delete muelle;
 }
 
 void ParticleSystem::update(double t)

@@ -137,6 +137,12 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		Psystem->setGravity(gravity);
 		break;
 	}
+	case 'K': {
+		float k;
+		std::cin >> k;
+		Psystem->setKMuelle(k);
+		break;
+	}
 	default:
 		break;
 	}

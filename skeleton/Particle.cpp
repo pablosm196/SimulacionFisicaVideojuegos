@@ -11,12 +11,16 @@ Particle::Particle()
 	force = Vector3(0, 0, 0);
 }
 
-Particle::Particle(Vector3 v, Vector3 p, float mass, float d, float t, Vector4 col, shape s)
+Particle::Particle(Vector3 v, Vector3 p, float m, float d, float t, Vector4 col, shape s)
 {
 	vel = v;
 	pose = PxTransform(p);
 	damping = d;
-	Imass = mass;
+	mass = m;
+	if (mass > 0)
+		Imass = 1 / mass;
+	else
+		Imass = 0;
 	lifespan = t;
 	color = col;
 	if(s == SPHERE)
@@ -33,10 +37,12 @@ Particle::~Particle()
 
 void Particle::integrate(double t)
 {
-	pose.p = pose.p + vel * t;
 	Vector3 acceleration = force * Imass;
 	vel += acceleration * t;
 	vel *= powf(damping, t);
+
+	pose.p = pose.p + vel * t;
+
 	actualTime += t;
 
 	clearForce();

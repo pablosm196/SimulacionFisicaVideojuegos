@@ -32,18 +32,44 @@ void ParticleSystem::generateSpringDemo()
 	_particles.push_back(p3);
 
 	water = new Particle(Vector3(0, 0, 0), Vector3(0, 0, -20), 0.998f, 1, 10000, Vector4(0, 0, 255, 1), BOX);
-	water->setBoxSize(5, 1, 5);
-	water->setMass(water->getVolumen());
+	water->setBoxSize(40, 1, 5);
+	water->setMass(water->getVolumen() * 1000);
 
 	buoyancy = new BuoyancyForceGenerator(water, 9.8);
 	
-	Particle* p4 = new Particle({ 0, 0, 0 }, { 0, -10, -20 }, 0.998f, 1, 1000, {255, 0, 0, 1}, BOX);
-	p4->setBoxSize(1, 3, 1);
-	std::cout << "Volumen: " << p4->getVolumen() << std::endl;
-	std::cout << "Altura: " << p4->getHeight() << std::endl;
+	Particle* p4 = new Particle({ 0, 0, 0 }, { -20, 2.99994695, -20 }, 0.998f, 1, 1000, { 255, 0, 0, 1 }, SPHERE); //Partícula que se hunde (más denso que el agua)
+	p4->setSphereRadius(3);
+	p4->setMass(p4->getVolumen() * 2000);
 	ForceRegistry->addRegistry(Gravity, p4);
 	ForceRegistry->addRegistry(buoyancy, p4);
+
+	Particle* p5 = new Particle({ 0, 0, 0 }, { -10, 10, -20 }, 0.998f, 1, 1000, {255, 0, 0, 1}, BOX); //Partícula que incialmente no está tocando el agua 
+	p5->setBoxSize(1, 3, 1);
+	ForceRegistry->addRegistry(Gravity, p5);
+	ForceRegistry->addRegistry(buoyancy, p5);
+
+	Particle* p6 = new Particle({ 0, 0, 0 }, { 0, 5, -20 }, 0.998f, 1, 1000, { 255, 0, 0, 1 }, BOX); //Partícula que está tocando el agua
+	p6->setBoxSize(1, 3, 1);
+	ForceRegistry->addRegistry(Gravity, p6);
+	ForceRegistry->addRegistry(buoyancy, p6);
+
+	Particle* p7 = new Particle({ 0, 0, 0 }, { 10, 1.499, -20 }, 0.998f, 1, 1000, { 255, 0, 0, 1 }, BOX); //Fg = E (Partícula quieta)
+	p7->setBoxSize(1, 3, 1);
+	ForceRegistry->addRegistry(Gravity, p7);
+	ForceRegistry->addRegistry(buoyancy, p7);
+
+	Particle* p8 = new Particle({ 0, 0, 0 }, { 10, -1.5, -20 }, 0.998f, 1, 1000, { 255, 0, 0, 1 }, BOX); //Partícula inicialmente hundida (desaparece porque hace demasiada fuerza)
+	p8->setBoxSize(1, 3, 1);
+	ForceRegistry->addRegistry(Gravity, p8);
+	ForceRegistry->addRegistry(buoyancy, p8);
+
 	_particles.push_back(p4);
+	_particles.push_back(p5);
+	_particles.push_back(p6);
+	_particles.push_back(p7);
+	_particles.push_back(p8);
+
+	Gravity->setActive(true);
 }
 
 ParticleSystem::~ParticleSystem()

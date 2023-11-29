@@ -16,7 +16,7 @@ void WindGenerator::updateForce(Particle* p, double t)
 			return;
 
 		if(p->getPos().x < _position.x + radius && p->getPos().y < _position.y + radius && p->getPos().z < _position.z + radius)
-			p->addForce(k1 * (_windVelocity - p->getVel() + k2 * (_windVelocity - p->getVel()).magnitude() * (_windVelocity - p->getVel())));
+			p->addForce(k1 * (_windVelocity - p->getVel()) + k2 * (_windVelocity - p->getVel()).magnitude() * (_windVelocity - p->getVel()));
 	}
 }
 
@@ -80,14 +80,17 @@ void BuoyancyForceGenerator::updateForce(Particle* p, double t)
 {
 	float h = p->getPos().y;
 	float h0 = liquid->getPos().y;
+	float height = p->getHeight();
 	float immersed;
+	float densityO = (float) p->getMass() / p->getVolumen();
 
-	if (h - h0 > p->getHeight() * 0.5)
+	if (h - height * .5 > h0)
 		return;
-	else if (h0 - h > p->getHeight() * 0.5)
+	else if (h0 > h + p->getHeight() * 0.5)
 		immersed = 1.0f;
 	else
 		immersed = (h0 - h) / p->getHeight() + 0.5;
 
-	p->addForce(Vector3(0, density * p->getVolumen() * immersed * gravity, 0));
+	if(densityO < density)
+		p->addForce(Vector3(0, density * p->getVolumen() * immersed * gravity, 0));
 }

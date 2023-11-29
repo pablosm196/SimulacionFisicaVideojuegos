@@ -1,5 +1,4 @@
 #include "Particle.h"
-
 Particle::Particle()
 {
 	vel = Vector3(0, 0, 0);
@@ -18,7 +17,7 @@ Particle::Particle(Vector3 v, Vector3 p, float m, float d, float t, Vector4 col,
 	damping = d;
 	mass = m;
 	if (mass > 0)
-		Imass = 1 / mass;
+		Imass = (float) (1.0f / mass);
 	else
 		Imass = 0;
 	lifespan = t;
@@ -74,7 +73,7 @@ float Particle::getVolumen()
 	}
 	else if (shape == SPHERE) {
 		float r = renderItem->shape->getGeometry().sphere().radius;
-		return (4 / 3) * PxPi * r * r * r;
+		return (4.0f / 3.0f) * PxPi * r * r * r;
 	}
 	return 0.0f;
 }

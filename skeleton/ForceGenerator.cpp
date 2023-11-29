@@ -1,5 +1,5 @@
 #include "ForceGenerator.h"
-
+#include <iostream>
 void GravityForceGenerator::updateForce(Particle* p, double t)
 {
 	if (active) {
@@ -64,6 +64,30 @@ void ElasticRubber::updateForce(Particle* p, double t)
 {
 	Vector3 distance = other->getPos() - p->getPos();
 
-	if (distance.magnitude() < resting_length)
+	if (distance.magnitude() > resting_length)
 		SpringForceGenerator::updateForce(p, t);
+}
+
+BuoyancyForceGenerator::BuoyancyForceGenerator(Particle* l, float g)
+{
+	liquid = l;
+	density = (l->getMass() / l->getVolumen());
+	std::cout << "densidad: " << density << std::endl;
+	gravity = g;
+}
+
+void BuoyancyForceGenerator::updateForce(Particle* p, double t)
+{
+	float h = p->getPos().y;
+	float h0 = liquid->getPos().y;
+	float immersed;
+
+	if (h - h0 > p->getHeight() * 0.5)
+		return;
+	else if (h0 - h > p->getHeight() * 0.5)
+		immersed = 1.0f;
+	else
+		immersed = (h0 - h) / p->getHeight() + 0.5;
+
+	p->addForce(Vector3(0, density * p->getVolumen() * immersed * gravity, 0));
 }

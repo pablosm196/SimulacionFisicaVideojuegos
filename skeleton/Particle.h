@@ -2,6 +2,7 @@
 #include "RenderUtils.hpp"
 using namespace physx;
 
+enum Shape { SPHERE, BOX };
 class Particle
 {
 protected:
@@ -11,10 +12,10 @@ protected:
 	PxTransform pose;
 	RenderItem* renderItem;
 	Vector4 color;
+	Shape shape;
 public:
-	enum shape { SPHERE, BOX };
 	Particle();
-	Particle(Vector3 v, Vector3 p, float d, float m, float t = 5.0f, Vector4 col = {255, 0, 0, 1}, shape s = SPHERE);
+	Particle(Vector3 v, Vector3 p, float d, float m, float t = 5.0f, Vector4 col = {255, 0, 0, 1}, Shape s = SPHERE);
 	~Particle();
 
 	virtual void integrate(double t);
@@ -22,8 +23,17 @@ public:
 	inline void clearForce() { force *= 0.0f; }
 	inline void addForce(const Vector3& f) { force += f; }
 	inline const float getMass() { return mass; }
+	inline void setMass(float m) { 
+		mass = m;
+		if (mass > 0) Imass = 1 / m;
+		else Imass = 0;
+	}
 	inline const Vector3 getPos() { return pose.p; }
 	inline const Vector3 getVel() { return vel; }
 	inline const Vector4 getColor() { return color; }
+	float getHeight();
+	float getVolumen();
+	void setBoxSize(float w, float h, float l);
+	void setSphereRadius(float r);
 };
 

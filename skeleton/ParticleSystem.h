@@ -21,6 +21,8 @@ private:
 	WindGenerator* Wind;
 	ExplosionGenerator* Explosion;
 	AnchoredSpring* muelle;
+	Particle* water;
+	BuoyancyForceGenerator* buoyancy;
 
 	void generateSpringDemo();
 public:

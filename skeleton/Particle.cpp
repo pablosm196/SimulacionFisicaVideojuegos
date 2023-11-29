@@ -11,7 +11,7 @@ Particle::Particle()
 	force = Vector3(0, 0, 0);
 }
 
-Particle::Particle(Vector3 v, Vector3 p, float m, float d, float t, Vector4 col, shape s)
+Particle::Particle(Vector3 v, Vector3 p, float m, float d, float t, Vector4 col, Shape s)
 {
 	vel = v;
 	pose = PxTransform(p);
@@ -23,10 +23,12 @@ Particle::Particle(Vector3 v, Vector3 p, float m, float d, float t, Vector4 col,
 		Imass = 0;
 	lifespan = t;
 	color = col;
+	shape = s;
 	if(s == SPHERE)
 		renderItem = new RenderItem(CreateShape(PxSphereGeometry(1)), &pose, color);
 	else if(s == BOX)
 		renderItem = new RenderItem(CreateShape(PxBoxGeometry(1, 1, 1)), &pose, color);
+
 	force = Vector3(0, 0, 0);
 }
 
@@ -51,4 +53,42 @@ void Particle::integrate(double t)
 bool Particle::checkTime()
 {
 	return actualTime >= lifespan;
+}
+
+float Particle::getHeight()
+{
+	if (shape == BOX) {
+		return renderItem->shape->getGeometry().box().halfExtents.y;
+	}
+	else if (shape == SPHERE) {
+		return 2 * renderItem->shape->getGeometry().sphere().radius;
+	}
+	return 0.0f;
+}
+
+float Particle::getVolumen()
+{
+	if (shape == BOX) {
+		Vector3 box = renderItem->shape->getGeometry().box().halfExtents;
+		return box.x * box.y * box.z;
+	}
+	else if (shape == SPHERE) {
+		float r = renderItem->shape->getGeometry().sphere().radius;
+		return (4 / 3) * PxPi * r * r * r;
+	}
+	return 0.0f;
+}
+
+void Particle::setBoxSize(float w, float h, float l)
+{
+	shape = BOX;
+	renderItem->shape->release();
+	renderItem->shape->setGeometry(PxBoxGeometry(w, h, l));
+}
+
+void Particle::setSphereRadius(float r)
+{
+	shape = SPHERE;
+	renderItem->shape->release();
+	renderItem->shape->setGeometry(PxSphereGeometry(r));
 }

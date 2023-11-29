@@ -1,4 +1,5 @@
 #include "ParticleSystem.h"
+#include <iostream>
 
 void ParticleSystem::generateSpringDemo()
 {
@@ -29,6 +30,20 @@ void ParticleSystem::generateSpringDemo()
 	ForceRegistry->addRegistry(Explosion, p3);
 
 	_particles.push_back(p3);
+
+	water = new Particle(Vector3(0, 0, 0), Vector3(0, 0, -20), 0.998f, 1, 10000, Vector4(0, 0, 255, 1), BOX);
+	water->setBoxSize(5, 1, 5);
+	water->setMass(water->getVolumen());
+
+	buoyancy = new BuoyancyForceGenerator(water, 9.8);
+	
+	Particle* p4 = new Particle({ 0, 0, 0 }, { 0, -10, -20 }, 0.998f, 1, 1000, {255, 0, 0, 1}, BOX);
+	p4->setBoxSize(1, 3, 1);
+	std::cout << "Volumen: " << p4->getVolumen() << std::endl;
+	std::cout << "Altura: " << p4->getHeight() << std::endl;
+	ForceRegistry->addRegistry(Gravity, p4);
+	ForceRegistry->addRegistry(buoyancy, p4);
+	_particles.push_back(p4);
 }
 
 ParticleSystem::~ParticleSystem()
@@ -52,6 +67,8 @@ ParticleSystem::~ParticleSystem()
 	delete Torbellino;
 	delete Explosion;
 	delete muelle;
+	delete water;
+	delete buoyancy;
 }
 
 void ParticleSystem::update(double t)
@@ -118,6 +135,11 @@ void ParticleSystem::update(double t)
 		newFirework += NEW_FIREWORK_TIME;
 		generateFireworkSystem();
 	}
+
+	/*auto it = _particles.begin();
+	for (int i = 0; i < _particles.size() - 1; ++i) it++;
+
+	std::cout << (*it)->getPos().y << std::endl;*/
 }
 
 ParticleGenerator* ParticleSystem::getParticleGenerator(std::string name)

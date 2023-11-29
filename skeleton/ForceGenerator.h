@@ -70,7 +70,7 @@ public:
 class AnchoredSpring : public SpringForceGenerator {
 public:
 	AnchoredSpring(float _k, float resting, Vector3 position) : SpringForceGenerator(_k, resting, nullptr) {
-		other = new Particle({ 0, 0, 0 }, position, 0.998f, 0, 1000, { 0, 0, 0, 1 }, Particle::BOX);
+		other = new Particle({ 0, 0, 0 }, position, 0.998f, 0, 1000, { 0, 0, 0, 1 }, BOX);
 	}
 	virtual ~AnchoredSpring() { delete other; }
 };
@@ -78,6 +78,15 @@ public:
 class ElasticRubber : public SpringForceGenerator {
 public:
 	ElasticRubber(float _k, float resting, Particle* p) : SpringForceGenerator(_k, resting, p) {};
+	void updateForce(Particle* p, double t) override;
+};
+
+class BuoyancyForceGenerator : public ForceGenerator {
+protected:
+	float density, gravity;
+	Particle* liquid;
+public:
+	BuoyancyForceGenerator(Particle* l, float g);
 	void updateForce(Particle* p, double t) override;
 };
 

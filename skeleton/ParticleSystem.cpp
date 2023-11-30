@@ -60,6 +60,7 @@ void ParticleSystem::generateSpringDemo()
 
 	Particle* p8 = new Particle({ 0, 0, 0 }, { 10, -1.5, -20 }, 0.998f, 1, 1000, { 255, 0, 0, 1 }, BOX); //Partícula inicialmente hundida (desaparece porque hace demasiada fuerza)
 	p8->setBoxSize(1, 3, 1);
+	p8->setMass(3000);
 	ForceRegistry->addRegistry(Gravity, p8);
 	ForceRegistry->addRegistry(buoyancy, p8);
 

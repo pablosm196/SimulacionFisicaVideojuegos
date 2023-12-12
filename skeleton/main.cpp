@@ -31,10 +31,13 @@ PxPvd*                  gPvd        = NULL;
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
-//Particle* particle;
+
+
 std::vector<Projectile*> v;
 ParticleSystem* Psystem;
 bool torbellino, wind, gravity;
+
+PxRigidStatic* suelo;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -60,11 +63,28 @@ void initPhysics(bool interactive)
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
-	//particle = new Particle(Vector3(10, 0, 0), Vector3(0, 0, 0), Vector3(0, -9.8f, 0), 0.998f);
-	Psystem = new ParticleSystem();
+
+
+	Psystem = new ParticleSystem(gScene, gPhysics);
 	torbellino = false;
 	wind = false;
 	gravity = false;
+
+	//Suelo (sólido rígido)
+	suelo = gPhysics->createRigidStatic(PxTransform({ 0, 0, 0 }));
+	PxShape* plano = CreateShape(PxBoxGeometry(100, 1, 100));
+	suelo->attachShape(*plano);
+	gScene->addActor(*suelo);
+	RenderItem* sueloItem = new RenderItem(plano, suelo, { 1, 1, 0, 1 });
+
+
+	/*PxRigidDynamic* pelota = gPhysics->createRigidDynamic(PxTransform({0, 50, 0}));
+	pelota->setLinearVelocity({ 0, 2, 0 });
+	PxShape* esfera = CreateShape(PxSphereGeometry(5));
+	pelota->attachShape(*esfera);
+	PxRigidBodyExt::updateMassAndInertia(*pelota, 1);
+	gScene->addActor(*pelota);
+	RenderItem* pelotaItem = new RenderItem(esfera, pelota, { 0, 1, 0, 1 });*/
 }
 
 
@@ -105,7 +125,7 @@ void cleanupPhysics(bool interactive)
 	transport->release();
 	
 	gFoundation->release();
-	}
+}
 
 // Function called when a key is pressed
 void keyPress(unsigned char key, const PxTransform& camera)

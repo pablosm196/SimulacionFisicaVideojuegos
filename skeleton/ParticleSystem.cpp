@@ -89,6 +89,7 @@ ParticleSystem::~ParticleSystem()
 	}
 	
 	delete _firework_generator;
+	delete rg;
 	delete Gravity;
 	delete Wind;
 	delete Torbellino;
@@ -153,6 +154,16 @@ void ParticleSystem::update(double t)
 					ForceRegistry->addRegistry(Explosion, np);
 					_particles.push_back(np);
 				}
+			}
+		}
+		if (rg->getActive()) {
+			std::list<Particle*> l = rg->generateParticles();
+			for (Particle* p : l) {
+				ForceRegistry->addRegistry(Gravity, p);
+				ForceRegistry->addRegistry(Wind, p);
+				ForceRegistry->addRegistry(Torbellino, p);
+				ForceRegistry->addRegistry(Explosion, p);
+				scene->addActor(*(((RigidParticle*)p)->getRigidDynamic()));
 			}
 		}
 	}

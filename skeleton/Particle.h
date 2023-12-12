@@ -21,7 +21,7 @@ public:
 	virtual void integrate(double t);
 	virtual bool checkTime();
 	inline void clearForce() { force *= 0.0f; }
-	inline void addForce(const Vector3& f) { force += f; }
+	virtual inline void addForce(const Vector3& f) { force += f; }
 	inline const float getMass() { return mass; }
 	inline void setMass(float m) { 
 		mass = m;
@@ -35,5 +35,14 @@ public:
 	float getVolumen();
 	void setBoxSize(float w, float h, float l);
 	void setSphereRadius(float r);
+};
+
+class RigidParticle : public Particle {
+private:
+	PxRigidDynamic* rigid;
+public:
+	RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* physics, float t = 5.0f, Vector4 col = { 1, 0, 0, 1 }, Shape s = SPHERE, Vector3 angular_v = {0, 0, 0});
+	void addForce(const Vector3& f) override;
+	inline PxRigidDynamic* getRigidDynamic() { return rigid; }
 };
 

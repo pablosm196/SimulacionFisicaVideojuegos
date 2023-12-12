@@ -53,3 +53,12 @@ public:
 	std::list<Particle*> generateParticlesFromFireworks(Firework* parent);
 };
 
+class GaussianRigidGenerator : public GaussianParticleGenerator {
+private:
+	int maxParticles, currentParticles;
+	PxPhysics* physics;
+public:
+	GaussianRigidGenerator(Vector3 pos, Vector3 vel, double t, int n, int max, PxPhysics* px_physics);
+	std::list<Particle*> generateParticles() override;
+};
+

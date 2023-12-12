@@ -91,3 +91,27 @@ void Particle::setSphereRadius(float r)
 	renderItem->shape->release();
 	renderItem->shape->setGeometry(PxSphereGeometry(r));
 }
+
+RigidParticle::RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* physics, float t, Vector4 col, Shape s, Vector3 angular_v) : Particle(linear_v, p, 0.998f, m, t, col, s)
+{
+	rigid = physics->createRigidDynamic(pose);
+	rigid->setLinearVelocity(vel);
+	rigid->setAngularVelocity(angular_v);
+
+	PxShape* shape = nullptr;
+	if (s == SPHERE)
+		shape = CreateShape(PxSphereGeometry(1));
+	else if (s == BOX)
+		shape = CreateShape(PxBoxGeometry(1, 1, 1));
+	rigid->attachShape(*shape);
+
+	PxRigidBodyExt::updateMassAndInertia(*rigid, mass);
+
+	renderItem->release();
+	renderItem = new RenderItem(shape, rigid, col);
+}
+
+void RigidParticle::addForce(const Vector3& f)
+{
+	rigid->addForce(f);
+}

@@ -154,3 +154,37 @@ std::list<Particle*> FireworkGenerator::generateParticlesFromFireworks(Firework*
 	return list;
 }
 
+GaussianRigidGenerator::GaussianRigidGenerator(Vector3 pos, Vector3 vel, double t, int n, int max, PxPhysics* px_physics) : GaussianParticleGenerator(pos, vel, t, n)
+{
+	maxParticles = max;
+	currentParticles = 0;
+	physics = px_physics;
+}
+
+std::list<Particle*> GaussianRigidGenerator::generateParticles()
+{
+	srand(time(0));
+	std::list<Particle*> particles;
+
+	Vector3 pos, vel;
+	float r, g, b;
+	for (int i = 0; i < _num_particles && currentParticles <= maxParticles; ++i) {
+		pos.x = std_dev_pos.x + dist(dre) * 10;
+		pos.y = std_dev_pos.y + dist(dre) * 10;
+		pos.z = std_dev_pos.z + dist(dre) * 10;
+
+		vel.x = std_dev_vel.x + dist(dre) * 10;
+		vel.y = std_dev_vel.y + dist(dre);
+		vel.z = std_dev_vel.z + dist(dre) * 10;
+
+		r = rand() % 255 / 255.0f;
+		g = rand() % 255 / 255.0f;
+		b = rand() % 255 / 255.0f;
+
+		RigidParticle* newParticle = new RigidParticle(vel, pos, 1, physics, 2.0f, Vector4(r, g, b, 1));
+		particles.push_back(newParticle);
+		currentParticles++;
+	}
+
+	return particles;
+}

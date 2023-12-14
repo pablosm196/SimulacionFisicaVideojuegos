@@ -2,6 +2,8 @@
 #include "RenderUtils.hpp"
 using namespace physx;
 
+class GaussianRigidGenerator;
+
 enum Shape { SPHERE, BOX };
 class Particle
 {
@@ -16,7 +18,7 @@ protected:
 public:
 	Particle();
 	Particle(Vector3 v, Vector3 p, float d, float m, float t = 5.0f, Vector4 col = {255, 0, 0, 1}, Shape s = SPHERE);
-	~Particle();
+	virtual ~Particle();
 
 	virtual void integrate(double t);
 	virtual bool checkTime();
@@ -39,14 +41,14 @@ public:
 
 class RigidParticle : public Particle {
 private:
-	PxRigidDynamic* rigid;
+	PxRigidDynamic* rigid = nullptr;
 	PxScene* scene = nullptr;
+	GaussianRigidGenerator* rg = nullptr;
 public:
-	RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* physics, float t = 5.0f, Vector4 col = { 1, 0, 0, 1 }, Shape s = SPHERE, Vector3 angular_v = {0, 0, 0});
-	~RigidParticle();
+	RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* physics, PxScene* px_scene, float t = 5.0f, Vector4 col = { 1, 0, 0, 1 }, Shape s = SPHERE, Vector3 angular_v = {0, 0, 0});
+	~RigidParticle() override;
 	void addForce(const Vector3& f) override;
-	inline PxRigidDynamic* getRigidDynamic() { return rigid; }
-	inline void setScene(PxScene* s) { scene = s; }
 	void integrate(double t) override;
+	inline void setGenerator(GaussianRigidGenerator* creator) { rg = creator; }
 };
 

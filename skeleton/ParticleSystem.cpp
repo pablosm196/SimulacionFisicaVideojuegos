@@ -163,8 +163,6 @@ void ParticleSystem::update(double t)
 				ForceRegistry->addRegistry(Wind, p);
 				ForceRegistry->addRegistry(Torbellino, p);
 				ForceRegistry->addRegistry(Explosion, p);
-				scene->addActor(*(((RigidParticle*)p)->getRigidDynamic()));
-				((RigidParticle*)p)->setScene(scene);
 				_particles.push_back(p);
 			}
 		}
@@ -175,11 +173,6 @@ void ParticleSystem::update(double t)
 		newFirework += NEW_FIREWORK_TIME;
 		generateFireworkSystem();
 	}
-
-	/*auto it = _particles.begin();
-	for (int i = 0; i < _particles.size() - 1; ++i) it++;
-
-	std::cout << (*it)->getPos().y << std::endl;*/
 }
 
 ParticleGenerator* ParticleSystem::getParticleGenerator(std::string name)

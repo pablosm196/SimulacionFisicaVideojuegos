@@ -57,8 +57,10 @@ class GaussianRigidGenerator : public GaussianParticleGenerator {
 private:
 	int maxParticles, currentParticles;
 	PxPhysics* physics;
+	PxScene* scene;
 public:
-	GaussianRigidGenerator(Vector3 pos, Vector3 vel, double t, int n, int max, PxPhysics* px_physics);
+	GaussianRigidGenerator(Vector3 pos, Vector3 vel, double t, int n, int max, PxPhysics* px_physics, PxScene* px_scene);
 	std::list<Particle*> generateParticles() override;
+	inline void quitCurrentParticles() { currentParticles--; }
 };
 

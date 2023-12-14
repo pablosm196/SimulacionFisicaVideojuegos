@@ -1,4 +1,5 @@
 #include "Particle.h"
+#include "ParticleSystem.h"
 Particle::Particle()
 {
 	vel = Vector3(0, 0, 0);
@@ -92,7 +93,7 @@ void Particle::setSphereRadius(float r)
 	renderItem->shape->setGeometry(PxSphereGeometry(r));
 }
 
-RigidParticle::RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* physics, float t, Vector4 col, Shape s, Vector3 angular_v) : Particle(linear_v, p, 0.998f, m, t, col, s)
+RigidParticle::RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* physics, PxScene* px_scene, float t, Vector4 col, Shape s, Vector3 angular_v) : Particle(linear_v, p, 0.998f, m, t, col, s)
 {
 	rigid = physics->createRigidDynamic(pose);
 	rigid->setLinearVelocity(vel);
@@ -109,12 +110,14 @@ RigidParticle::RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* ph
 
 	renderItem->release();
 	renderItem = new RenderItem(shape, rigid, col);
+	scene = px_scene;
+	scene->addActor(*rigid);
 }
 
 RigidParticle::~RigidParticle()
 {
-	renderItem->release();
 	scene->removeActor(*rigid);
+	if (rg != nullptr) rg->quitCurrentParticles();
 }
 
 void RigidParticle::addForce(const Vector3& f)

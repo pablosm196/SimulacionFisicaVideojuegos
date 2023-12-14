@@ -24,17 +24,16 @@ private:
 	AnchoredSpring* muelle = nullptr;
 	Particle* water = nullptr;
 	BuoyancyForceGenerator* buoyancy = nullptr;
-	PxScene* scene;
 
 	void generateSpringDemo();
 public:
-	ParticleSystem(PxScene* s, PxPhysics* p) : _particles(0), _particle_generators(0), newParticle(0.0f), time(0.0f), timeFirework(0.0f), newFirework(0.0f), scene(s) {
+	ParticleSystem(PxScene* s, PxPhysics* p) : _particles(0), _particle_generators(0), newParticle(0.0f), time(0.0f), timeFirework(0.0f), newFirework(0.0f){
 		UniformParticleGenerator* ug = new UniformParticleGenerator(Vector3(0, 0, 0), Vector3(0, 10, 0), 5);
 		_particle_generators.push_back(ug);
 		GaussianParticleGenerator* gg = new GaussianParticleGenerator(Vector3(0, 0, 0), Vector3(0, 0, 0), 1, 1);
 		_particle_generators.push_back(gg);
 		_firework_generator = new FireworkGenerator(Vector3(0, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 0), 1);
-		rg = new GaussianRigidGenerator(Vector3(0, 15, 0), Vector3(0, 10, 0), 1, 1, 100, p);
+		rg = new GaussianRigidGenerator(Vector3(0, 15, 0), Vector3(0, 10, 0), 1, 1, 100, p, s);
 		rg->setActive(true);
 
 		ForceRegistry = new ParticleForceRegistry();

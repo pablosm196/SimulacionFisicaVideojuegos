@@ -111,7 +111,18 @@ RigidParticle::RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* ph
 	renderItem = new RenderItem(shape, rigid, col);
 }
 
+RigidParticle::~RigidParticle()
+{
+	renderItem->release();
+	scene->removeActor(*rigid);
+}
+
 void RigidParticle::addForce(const Vector3& f)
 {
 	rigid->addForce(f);
+}
+
+void RigidParticle::integrate(double t)
+{
+	actualTime += t;
 }

@@ -164,6 +164,8 @@ void ParticleSystem::update(double t)
 				ForceRegistry->addRegistry(Torbellino, p);
 				ForceRegistry->addRegistry(Explosion, p);
 				scene->addActor(*(((RigidParticle*)p)->getRigidDynamic()));
+				((RigidParticle*)p)->setScene(scene);
+				_particles.push_back(p);
 			}
 		}
 	}

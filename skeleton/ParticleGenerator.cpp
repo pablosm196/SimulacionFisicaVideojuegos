@@ -181,7 +181,7 @@ std::list<Particle*> GaussianRigidGenerator::generateParticles()
 		g = rand() % 255 / 255.0f;
 		b = rand() % 255 / 255.0f;
 
-		RigidParticle* newParticle = new RigidParticle(vel, pos, 1, physics, 2.0f, Vector4(r, g, b, 1));
+		RigidParticle* newParticle = new RigidParticle(vel, pos, 1, physics, 1.0f, Vector4(r, g, b, 1));
 		particles.push_back(newParticle);
 		currentParticles++;
 	}

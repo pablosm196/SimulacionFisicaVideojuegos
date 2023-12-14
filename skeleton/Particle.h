@@ -40,9 +40,13 @@ public:
 class RigidParticle : public Particle {
 private:
 	PxRigidDynamic* rigid;
+	PxScene* scene = nullptr;
 public:
 	RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* physics, float t = 5.0f, Vector4 col = { 1, 0, 0, 1 }, Shape s = SPHERE, Vector3 angular_v = {0, 0, 0});
+	~RigidParticle();
 	void addForce(const Vector3& f) override;
 	inline PxRigidDynamic* getRigidDynamic() { return rigid; }
+	inline void setScene(PxScene* s) { scene = s; }
+	void integrate(double t) override;
 };
 

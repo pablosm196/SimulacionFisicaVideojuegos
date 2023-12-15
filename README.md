@@ -1,8 +1,7 @@
-# SimulacionFisicaVideojuegos
-Repositorio de las prácticas de la asignatura de Simulación Física de Videojuegos
+# Sólidos Rígidos
 
-En la carpeta skeleton estará vuestro código fuente
+He creado un sólido estático en el main que funciona como suelo.
 
-Necesitaréis además descomprimir el archivo que se indica a continuación en la raíz del repositorio:
+Creo una nueva clase dentro de Particle.h llamada RigidParticle que hereda de Particle y tiene una escena, un tipo PxRigidDynamic y una referencia al generador que lo crea. Esta clase hereda de Particle para poder aprovechar la funcionalidad que ya tenía implementada de las fuerzas para el resto de partículas. Como del movimiento y la aplicación de físicas ya se encarga el motor, su método integrate solo se encarga de sumarle el tiempo que lleva viva la partícula.
 
-Carpetas bin y common https://ucomplutense-my.sharepoint.com/:u:/g/personal/davalejo_ucm_es/EZcsdyIoqTFOrF4hdfkVYk0BJZ9IycJ3QqXQFwaXVrlSKg?e=pfs6IO
+Finalmente creo una clase GaussianRigidGenerator, la cual hereda de GaussianGenerator. Tiene dos variables que indican el máximo de partículas que puede tener ese generador y el número de partículas actuales. En el ParticleSystem hay un generador de este tipo.

@@ -99,17 +99,16 @@ RigidParticle::RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* ph
 	rigid->setLinearVelocity(vel);
 	rigid->setAngularVelocity(angular_v);
 
-	PxShape* shape = nullptr;
 	if (s == SPHERE)
-		shape = CreateShape(PxSphereGeometry(1));
+		Pshape = CreateShape(PxSphereGeometry(1));
 	else if (s == BOX)
-		shape = CreateShape(PxBoxGeometry(1, 1, 1));
-	rigid->attachShape(*shape);
+		Pshape = CreateShape(PxBoxGeometry(1, 1, 1));
+	rigid->attachShape(*Pshape);
 
 	PxRigidBodyExt::updateMassAndInertia(*rigid, mass);
 
 	renderItem->release();
-	renderItem = new RenderItem(shape, rigid, col);
+	renderItem = new RenderItem(Pshape, rigid, col);
 	scene = px_scene;
 	scene->addActor(*rigid);
 }
@@ -128,4 +127,16 @@ void RigidParticle::addForce(const Vector3& f)
 void RigidParticle::integrate(double t)
 {
 	actualTime += t;
+}
+
+void RigidParticle::setBoxSize(float w, float h, float l)
+{
+	shape = BOX;
+
+	rigid->detachShape(*Pshape);
+	renderItem->shape->release();
+
+	Pshape = CreateShape(PxBoxGeometry(w, h, l));
+	rigid->attachShape(*Pshape);
+	renderItem->shape = Pshape;
 }

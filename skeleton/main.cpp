@@ -10,6 +10,7 @@
 #include "Particle.h"
 #include "Projectile.h"
 #include "ParticleSystem.h"
+#include "SolidSystem.h"
 #include <iostream>
 
 std::string display_text = "This is a test";
@@ -33,11 +34,12 @@ PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
 
-std::vector<Projectile*> v;
-ParticleSystem* Psystem;
+//ParticleSystem* Psystem = nullptr;
 bool torbellino, wind, gravity;
 
 PxRigidStatic* suelo;
+
+SolidSystem* SolidSys;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -64,8 +66,7 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-
-	Psystem = new ParticleSystem(gScene, gPhysics);
+	//Psystem = new ParticleSystem(gScene, gPhysics);
 	torbellino = false;
 	wind = false;
 	gravity = false;
@@ -85,6 +86,8 @@ void initPhysics(bool interactive)
 	PxRigidBodyExt::updateMassAndInertia(*pelota, 1);
 	gScene->addActor(*pelota);
 	RenderItem* pelotaItem = new RenderItem(esfera, pelota, { 0, 1, 0, 1 });*/
+
+	SolidSys = new SolidSystem(gScene, gPhysics);
 }
 
 
@@ -97,11 +100,9 @@ void stepPhysics(bool interactive, double t)
 
 	gScene->simulate(t);
 	gScene->fetchResults(true);
-	//particle->integrate(t);
-	//p->integrate(t);
-	for (int i = 0; i < v.size(); ++i)
-		v[i]->integrate(t);
-	Psystem->update(t);
+
+	//Psystem->update(t);
+	SolidSys->update(t);
 }
 
 // Function to clean data
@@ -109,9 +110,8 @@ void stepPhysics(bool interactive, double t)
 void cleanupPhysics(bool interactive)
 {
 	//delete particle;
-	for (int i = 0; i < v.size(); ++i)
-		delete v[i];
-	delete Psystem;
+	//delete Psystem;
+	delete SolidSys;
 
 	PX_UNUSED(interactive);
 
@@ -132,35 +132,25 @@ void keyPress(unsigned char key, const PxTransform& camera)
 {
 	PX_UNUSED(camera);
 
+	SolidSys->keyPress(key);
+
 	switch (toupper(key))
 	{
 		//case 'B': break;
 		//case ' ':	break;
-	case 'E': {
-		/*Projectile* p = new Projectile(GetCamera()->getDir() * 330, GetCamera()->getDir() * 10, GetCamera()->getTransform().p, Vector3(0, -9.8f, 0), 0.998f, 0.2f);
-		v.push_back(p);*/
-		Psystem->generateExplosion();
-		break;
-	}
 	case 'T': {
 		torbellino = !torbellino;
-		Psystem->setTorbellino(torbellino);
+		//Psystem->setTorbellino(torbellino);
 		break;
 	}
 	case 'V': {
 		wind = !wind;
-		Psystem->setWind(wind);
+		//Psystem->setWind(wind);
 		break;
 	}
 	case 'G': {
 		gravity = !gravity;
-		Psystem->setGravity(gravity);
-		break;
-	}
-	case 'K': {
-		float k;
-		std::cin >> k;
-		Psystem->setKMuelle(k);
+		//Psystem->setGravity(gravity);
 		break;
 	}
 	default:

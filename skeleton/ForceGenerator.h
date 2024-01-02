@@ -21,7 +21,7 @@ class GravityForceGenerator : public ForceGenerator {
 protected:
 	Vector3 _gravity;
 public:
-	GravityForceGenerator(const Vector3& g) : _gravity(g) { active = false; };
+	GravityForceGenerator(const Vector3& g) : _gravity(g) { active = false; _name = "gravity"; };
 	void updateForce(Particle* p, double t) override;
 	inline void setGravity(Vector3 g) { _gravity = g; }
 };
@@ -31,7 +31,7 @@ protected:
 	Vector3 _windVelocity, _position;
 	float k1 = 0, k2 = 0, radius;
 public:
-	WindGenerator(Vector3 p, Vector3 v, float r, float coef1 = 0, float coef2 = 0) : _position(p), _windVelocity(v), radius(r), k1(coef1), k2(coef2) { active = false; };
+	WindGenerator(Vector3 p, Vector3 v, float r, float coef1 = 0, float coef2 = 0) : _position(p), _windVelocity(v), radius(r), k1(coef1), k2(coef2) { active = false;  _name = "wind"; };
 	void updateForce(Particle* p, double t) override;
 	inline void setWindVelocity(Vector3 v) { _windVelocity = v; }
 	inline void setK1(float coef1) { k1 = coef1; }
@@ -42,7 +42,7 @@ class TorbellinoGenerator : public WindGenerator {
 protected:
 	float K;
 public:
-	TorbellinoGenerator(Vector3 p, Vector3 v, float r, float force, float coef1 = 0, float coef2 = 0) : WindGenerator(p, v, r, coef1, coef2), K(force) { active = false; };
+	TorbellinoGenerator(Vector3 p, Vector3 v, float r, float force, float coef1 = 0, float coef2 = 0) : WindGenerator(p, v, r, coef1, coef2), K(force) { active = false; _name = "torbellino"; };
 	void updateForce(Particle* p, double t) override;
 };
 
@@ -51,7 +51,7 @@ protected:
 	Vector3 _position, _velocity;
 	float K, radius, timeConst, time;
 public:
-	ExplosionGenerator(Vector3 p, Vector3 v, float force, float t = 1.0f) : _position(p), _velocity(v), K(force), radius(0), timeConst(t), time(0) { active = false; };
+	ExplosionGenerator(Vector3 p, Vector3 v, float force, float t = 1.0f) : _position(p), _velocity(v), K(force), radius(0), timeConst(t), time(0) { active = false; _name = "explosion"; };
 	void updateForce(Particle* p, double t) override;
 	inline void updateTime(double t) { time += t; }
 };
@@ -61,7 +61,7 @@ protected:
 	float k, resting_length;
 	Particle* other;
 public:
-	SpringForceGenerator(float _k, float resting, Particle* p) : k(_k), resting_length(resting), other(p) {};
+	SpringForceGenerator(float _k, float resting, Particle* p) : k(_k), resting_length(resting), other(p) { _name = "muelle"; };
 	virtual ~SpringForceGenerator() = default;
 	void updateForce(Particle* p, double t) override;
 	inline void setK(float _k) { k = _k; }
@@ -71,13 +71,14 @@ class AnchoredSpring : public SpringForceGenerator {
 public:
 	AnchoredSpring(float _k, float resting, Vector3 position) : SpringForceGenerator(_k, resting, nullptr) {
 		other = new Particle({ 0, 0, 0 }, position, 0.998f, 0, 1000, { 0, 0, 0, 1 }, BOX);
+		_name = "muelleAnclado";
 	}
 	virtual ~AnchoredSpring() { delete other; }
 };
 
 class ElasticRubber : public SpringForceGenerator {
 public:
-	ElasticRubber(float _k, float resting, Particle* p) : SpringForceGenerator(_k, resting, p) {};
+	ElasticRubber(float _k, float resting, Particle* p) : SpringForceGenerator(_k, resting, p) { _name = "gomaElastica"; };
 	void updateForce(Particle* p, double t) override;
 };
 

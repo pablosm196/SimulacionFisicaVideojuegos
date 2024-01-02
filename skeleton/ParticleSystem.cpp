@@ -9,25 +9,24 @@ void ParticleSystem::generateSpringDemo()
 	//SpringForceGenerator* f1 = new SpringForceGenerator(1, 10, p2);
 	ElasticRubber* f1 = new ElasticRubber(5, 10, p2);
 	ForceRegistry->addRegistry(f1, p1);
-	ForceRegistry->addRegistry(Gravity, p1);
-	ForceRegistry->addRegistry(Wind, p1);
+	for (ForceGenerator* fg : _forces)
+		ForceRegistry->addRegistry(fg, p1);
 
 	//SpringForceGenerator* f2 = new SpringForceGenerator(1, 10, p1);
 	ElasticRubber* f2 = new ElasticRubber(5, 10, p1);
 	ForceRegistry->addRegistry(f2, p2);
-	ForceRegistry->addRegistry(Gravity, p2);
-	//ForceRegistry->addRegistry(Wind, p2);
+	for (ForceGenerator* fg : _forces)
+		ForceRegistry->addRegistry(fg, p1);
 
 	_particles.push_back(p1);
 	_particles.push_back(p2);
 
 	/**/Particle* p3 = new Particle({0, 0, 0}, {20, -5, 0}, 0.998f, 1, 1000);
-	muelle = new AnchoredSpring(10, 10, { 20, 10, 0 });
+	AnchoredSpring* muelle = new AnchoredSpring(10, 10, { 20, 10, 0 });
 	ForceRegistry->addRegistry(muelle, p3);
 
-	ForceRegistry->addRegistry(Gravity, p3);
-	ForceRegistry->addRegistry(Wind, p3);
-	ForceRegistry->addRegistry(Explosion, p3);
+	for (ForceGenerator* fg : _forces)
+		ForceRegistry->addRegistry(fg, p1);
 
 	_particles.push_back(p3);
 
@@ -35,33 +34,38 @@ void ParticleSystem::generateSpringDemo()
 	water->setBoxSize(40, 1, 5);
 	water->setMass(water->getVolumen() * 1000);
 
-	buoyancy = new BuoyancyForceGenerator(water, 9.8);
+	BuoyancyForceGenerator* buoyancy = new BuoyancyForceGenerator(water, 9.8);
 	
 	Particle* p4 = new Particle({ 0, 0, 0 }, { -20, 2.99994695, -20 }, 0.998f, 1, 1000, { 255, 0, 0, 1 }, SPHERE); //Partícula que se hunde (más denso que el agua)
 	p4->setSphereRadius(3);
 	p4->setMass(p4->getVolumen() * 2000);
-	ForceRegistry->addRegistry(Gravity, p4);
+	for (ForceGenerator* fg : _forces)
+		ForceRegistry->addRegistry(fg, p1);
 	ForceRegistry->addRegistry(buoyancy, p4);
 
 	Particle* p5 = new Particle({ 0, 0, 0 }, { -10, 10, -20 }, 0.998f, 1, 1000, {255, 0, 0, 1}, BOX); //Partícula que incialmente no está tocando el agua 
 	p5->setBoxSize(1, 3, 1);
-	ForceRegistry->addRegistry(Gravity, p5);
+	for (ForceGenerator* fg : _forces)
+		ForceRegistry->addRegistry(fg, p1);
 	ForceRegistry->addRegistry(buoyancy, p5);
 
 	Particle* p6 = new Particle({ 0, 0, 0 }, { 0, 5, -20 }, 0.998f, 1, 1000, { 255, 0, 0, 1 }, BOX); //Partícula que está tocando el agua
 	p6->setBoxSize(1, 3, 1);
-	ForceRegistry->addRegistry(Gravity, p6);
+	for (ForceGenerator* fg : _forces)
+		ForceRegistry->addRegistry(fg, p1);
 	ForceRegistry->addRegistry(buoyancy, p6);
 
 	Particle* p7 = new Particle({ 0, 0, 0 }, { 10, 1.499, -20 }, 0.998f, 1, 1000, { 255, 0, 0, 1 }, BOX); //Fg = E (Partícula quieta)
 	p7->setBoxSize(1, 3, 1);
-	ForceRegistry->addRegistry(Gravity, p7);
+	for (ForceGenerator* fg : _forces)
+		ForceRegistry->addRegistry(fg, p1);
 	ForceRegistry->addRegistry(buoyancy, p7);
 
 	Particle* p8 = new Particle({ 0, 0, 0 }, { 10, -1.5, -20 }, 0.998f, 1, 1000, { 255, 0, 0, 1 }, BOX); //Partícula inicialmente hundida (desaparece porque hace demasiada fuerza)
 	p8->setBoxSize(1, 3, 1);
 	p8->setMass(3000);
-	ForceRegistry->addRegistry(Gravity, p8);
+	for (ForceGenerator* fg : _forces)
+		ForceRegistry->addRegistry(fg, p1);
 	ForceRegistry->addRegistry(buoyancy, p8);
 
 	_particles.push_back(p4);
@@ -70,7 +74,12 @@ void ParticleSystem::generateSpringDemo()
 	_particles.push_back(p7);
 	_particles.push_back(p8);
 
-	Gravity->setActive(true);
+	_forcesSpring.push_back(f1);
+	_forcesSpring.push_back(f2);
+	_forcesSpring.push_back(muelle);
+	_forcesSpring.push_back(buoyancy);
+
+	_forces.front()->setActive(true);
 }
 
 ParticleSystem::~ParticleSystem()
@@ -87,22 +96,26 @@ ParticleSystem::~ParticleSystem()
 		delete(*i);
 		i = _fireworks.erase(i);
 	}
+	for (auto i = _forces.begin(); i != _forces.end();) {
+		delete(*i);
+		i = _forces.erase(i);
+	}
+	for (auto i = _forcesSpring.begin(); i != _forcesSpring.end();) {
+		delete(*i);
+		i = _forcesSpring.erase(i);
+	}
+	
 	
 	delete _firework_generator;
 	delete rg;
-	delete Gravity;
-	delete Wind;
-	delete Torbellino;
-	delete Explosion;
-	delete muelle;
 	delete water;
-	delete buoyancy;
 }
 
 void ParticleSystem::update(double t)
 {
-	if(Explosion->getActive())
-		Explosion->updateTime(t);
+	auto it = _forces.begin();
+	while (it != _forces.end() && (*it)->_name != "explosion") ++it;
+	if (it != _forces.end() && (*it)->getActive()) (*it)->updateTime(t);
 
 	ForceRegistry->updateForces(t);
 
@@ -126,10 +139,8 @@ void ParticleSystem::update(double t)
 			std::list<Particle*> l = _firework_generator->generateParticlesFromFireworks((*i));
 			for (Particle* p : l) {
 				_fireworks.push_back((Firework*)p);
-				ForceRegistry->addRegistry(Gravity, p);
-				ForceRegistry->addRegistry(Wind, p);
-				ForceRegistry->addRegistry(Torbellino, p);
-				ForceRegistry->addRegistry(Explosion, p);
+				for (ForceGenerator* fg : _forces)
+					ForceRegistry->addRegistry(fg, p);
 			}
 			ForceRegistry->deleteParticleRegistry(*i);
 			delete(*i);
@@ -148,10 +159,8 @@ void ParticleSystem::update(double t)
 			if (p->getActive()) {
 				std::list<Particle*> l = p->generateParticles();
 				for (Particle* np : l) {
-					ForceRegistry->addRegistry(Gravity, np);
-					ForceRegistry->addRegistry(Wind, np);
-					ForceRegistry->addRegistry(Torbellino, np);
-					ForceRegistry->addRegistry(Explosion, np);
+					for (ForceGenerator* fg : _forces)
+						ForceRegistry->addRegistry(fg, np);
 					_particles.push_back(np);
 				}
 			}
@@ -159,10 +168,8 @@ void ParticleSystem::update(double t)
 		if (rg->getActive()) {
 			std::list<Particle*> l = rg->generateParticles();
 			for (Particle* p : l) {
-				ForceRegistry->addRegistry(Gravity, p);
-				ForceRegistry->addRegistry(Wind, p);
-				ForceRegistry->addRegistry(Torbellino, p);
-				ForceRegistry->addRegistry(Explosion, p);
+				for (ForceGenerator* fg : _forces)
+					ForceRegistry->addRegistry(fg, p);
 				_particles.push_back(p);
 			}
 		}
@@ -185,10 +192,8 @@ void ParticleSystem::generateFireworkSystem()
 	if (_firework_generator->getActive()) {
 			std::list<Particle*> l = _firework_generator->generateParticles();
 			for (Particle* nf : l) {
-				ForceRegistry->addRegistry(Gravity, nf);
-				ForceRegistry->addRegistry(Wind, nf);
-				ForceRegistry->addRegistry(Torbellino, nf);
-				ForceRegistry->addRegistry(Explosion, nf);
+				for (ForceGenerator* fg : _forces)
+					ForceRegistry->addRegistry(fg, nf);
 				_fireworks.push_back((Firework*)nf);
 			}
 		}
@@ -196,20 +201,28 @@ void ParticleSystem::generateFireworkSystem()
 
 void ParticleSystem::generateExplosion()
 {
-	Explosion->setActive(true);
+	auto it = _forces.begin();
+	while (it != _forces.end() && (*it)->_name != "explosion") ++it;
+	if (it != _forces.end()) (*it)->setActive(true);
 }
 
 void ParticleSystem::setGravity(bool g)
 {
-	Gravity->setActive(g);
+	auto it = _forces.begin();
+	while (it != _forces.end() && (*it)->_name != "gravity") ++it;
+	if (it != _forces.end()) (*it)->setActive(true);
 }
 
 void ParticleSystem::setTorbellino(bool t)
 {
-	Torbellino->setActive(t);
+	auto it = _forces.begin();
+	while (it != _forces.end() && (*it)->_name != "torbellino") ++it;
+	if (it != _forces.end()) (*it)->setActive(true);
 }
 
 void ParticleSystem::setWind(bool w)
 {
-	Wind->setActive(w);
+	auto it = _forces.begin();
+	while (it != _forces.end() && (*it)->_name != "wind") ++it;
+	if (it != _forces.end()) (*it)->setActive(true);
 }

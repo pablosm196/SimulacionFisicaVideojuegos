@@ -35,7 +35,7 @@ public:
 	inline const Vector4 getColor() { return color; }
 	float getHeight();
 	float getVolumen();
-	void setBoxSize(float w, float h, float l);
+	virtual void setBoxSize(float w, float h, float l);
 	void setSphereRadius(float r);
 };
 
@@ -43,12 +43,15 @@ class RigidParticle : public Particle {
 private:
 	PxRigidDynamic* rigid = nullptr;
 	PxScene* scene = nullptr;
+	PxShape* Pshape;
 	GaussianRigidGenerator* rg = nullptr;
 public:
 	RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* physics, PxScene* px_scene, float t = 5.0f, Vector4 col = { 1, 0, 0, 1 }, Shape s = SPHERE, Vector3 angular_v = {0, 0, 0});
 	~RigidParticle() override;
 	void addForce(const Vector3& f) override;
 	void integrate(double t) override;
+	void setBoxSize(float w, float h, float l) override;
 	inline void setGenerator(GaussianRigidGenerator* creator) { rg = creator; }
+	PxRigidDynamic* getRigid() { return rigid; }
 };
 

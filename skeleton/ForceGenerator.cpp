@@ -72,8 +72,8 @@ BuoyancyForceGenerator::BuoyancyForceGenerator(Particle* l, float g)
 {
 	liquid = l;
 	density = (l->getMass() / l->getVolumen());
-	std::cout << "densidad: " << density << std::endl;
 	gravity = g;
+	_name = "flota";
 }
 
 void BuoyancyForceGenerator::updateForce(Particle* p, double t)

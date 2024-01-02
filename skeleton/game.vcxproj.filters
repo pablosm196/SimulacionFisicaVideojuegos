@@ -17,6 +17,8 @@
     <ClCompile Include="Firework.cpp" />
     <ClCompile Include="ForceGenerator.cpp" />
     <ClCompile Include="ParticleForceRegistry.cpp" />
+    <ClCompile Include="Trigger.cpp" />
+    <ClCompile Include="SolidSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -35,6 +37,8 @@
     <ClInclude Include="Firework.h" />
     <ClInclude Include="ForceGenerator.h" />
     <ClInclude Include="ParticleForceRegistry.h" />
+    <ClInclude Include="Trigger.h" />
+    <ClInclude Include="SolidSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

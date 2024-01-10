@@ -68,12 +68,13 @@ void ElasticRubber::updateForce(Particle* p, double t)
 		SpringForceGenerator::updateForce(p, t);
 }
 
-BuoyancyForceGenerator::BuoyancyForceGenerator(Particle* l, float g)
+BuoyancyForceGenerator::BuoyancyForceGenerator(Particle* l, float g, Vector3 corriente)
 {
 	liquid = l;
 	density = (l->getMass() / l->getVolumen());
 	gravity = g;
 	_name = "flota";
+	current = corriente;
 }
 
 void BuoyancyForceGenerator::updateForce(Particle* p, double t)
@@ -92,5 +93,5 @@ void BuoyancyForceGenerator::updateForce(Particle* p, double t)
 		immersed = (h0 - h) / p->getHeight() + 0.5;
 
 	if(densityO < density)
-		p->addForce(Vector3(0, density * p->getVolumen() * immersed * gravity, 0));
+		p->addForce(Vector3(0, density * p->getVolumen() * immersed * gravity, 0) + current);
 }

@@ -86,8 +86,9 @@ class BuoyancyForceGenerator : public ForceGenerator {
 protected:
 	float density, gravity;
 	Particle* liquid;
+	Vector3 current;
 public:
-	BuoyancyForceGenerator(Particle* l, float g);
+	BuoyancyForceGenerator(Particle* l, float g, Vector3 corriente = { 0, 0, 0 });
 	void updateForce(Particle* p, double t) override;
 };
 

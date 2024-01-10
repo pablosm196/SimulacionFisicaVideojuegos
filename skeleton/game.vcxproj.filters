@@ -19,6 +19,7 @@
     <ClCompile Include="ParticleForceRegistry.cpp" />
     <ClCompile Include="Trigger.cpp" />
     <ClCompile Include="SolidSystem.cpp" />
+    <ClCompile Include="MyCallBacks.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -39,6 +40,7 @@
     <ClInclude Include="ParticleForceRegistry.h" />
     <ClInclude Include="Trigger.h" />
     <ClInclude Include="SolidSystem.h" />
+    <ClInclude Include="MyCallBacks.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

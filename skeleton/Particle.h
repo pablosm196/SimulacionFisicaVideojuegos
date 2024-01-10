@@ -30,8 +30,8 @@ public:
 		if (mass > 0) Imass = 1 / m;
 		else Imass = 0;
 	}
-	inline const Vector3 getPos() { return pose.p; }
-	inline const Vector3 getVel() { return vel; }
+	inline virtual const Vector3 getPos() { return pose.p; }
+	inline virtual const Vector3 getVel() { return vel; }
 	inline const Vector4 getColor() { return color; }
 	float getHeight();
 	float getVolumen();
@@ -40,7 +40,7 @@ public:
 };
 
 class RigidParticle : public Particle {
-private:
+protected:
 	PxRigidDynamic* rigid = nullptr;
 	PxScene* scene = nullptr;
 	PxShape* Pshape;
@@ -53,5 +53,17 @@ public:
 	void setBoxSize(float w, float h, float l) override;
 	inline void setGenerator(GaussianRigidGenerator* creator) { rg = creator; }
 	PxRigidDynamic* getRigid() { return rigid; }
+	inline const Vector3 getPos() override { return rigid->getGlobalPose().p; }
+	inline const Vector3 getVel() override { return rigid->getLinearVelocity(); }
+};
+
+class Bolo : public RigidParticle {
+private:
+	bool tirado;
+public:
+	Bolo(Vector3 linear_v, Vector3 p, float m, PxPhysics* physics, PxScene* px_scene, float t = 5.0f, Vector4 col = { 1, 0, 0, 1 }, Shape s = SPHERE, Vector3 angular_v = { 0, 0, 0 }) : RigidParticle(linear_v, p, m, physics, px_scene, t, col, s, angular_v) { tirado = false; };
+	~Bolo() override = default;
+	void setTirado() { tirado = true; }
+	bool getTirado() { return tirado; }
 };
 

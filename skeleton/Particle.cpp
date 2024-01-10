@@ -111,6 +111,7 @@ RigidParticle::RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* ph
 	renderItem = new RenderItem(Pshape, rigid, col);
 	scene = px_scene;
 	scene->addActor(*rigid);
+	rigid->userData = this;
 }
 
 RigidParticle::~RigidParticle()

@@ -15,9 +15,10 @@ protected:
 	RenderItem* renderItem;
 	Vector4 color;
 	Shape shape;
+	Vector3 size;
 public:
 	Particle();
-	Particle(Vector3 v, Vector3 p, float d, float m, float t = 5.0f, Vector4 col = {255, 0, 0, 1}, Shape s = SPHERE);
+	Particle(Vector3 v, Vector3 p, float d, float m, float t = 5.0f, Vector4 col = { 255, 0, 0, 1 }, Shape s = SPHERE);
 	virtual ~Particle();
 
 	virtual void integrate(double t);
@@ -25,7 +26,7 @@ public:
 	inline void clearForce() { force *= 0.0f; }
 	virtual inline void addForce(const Vector3& f) { force += f; }
 	inline const float getMass() { return mass; }
-	inline void setMass(float m) { 
+	inline void setMass(float m) {
 		mass = m;
 		if (mass > 0) Imass = 1 / m;
 		else Imass = 0;
@@ -37,6 +38,7 @@ public:
 	float getVolumen();
 	virtual void setBoxSize(float w, float h, float l);
 	void setSphereRadius(float r);
+	inline Vector3 getSize() {return size; }
 };
 
 class RigidParticle : public Particle {

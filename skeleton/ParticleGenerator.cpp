@@ -21,21 +21,23 @@ std::list<Particle*> GaussianParticleGenerator::generateParticles()
 	std::list<Particle*> particles;
 
 	Vector3 pos, vel;
-	float r, g, b;
+	float r, g, b, mass;
 	for (int i = 0; i < _num_particles; ++i) {
-		pos.x = std_dev_pos.x + dist(dre) * 10;
-		pos.y = std_dev_pos.y + dist(dre) * 10;
-		pos.z = std_dev_pos.z + dist(dre) * 10;
+		pos.x = std_dev_pos.x + dist(dre) * 2;
+		pos.y = std_dev_pos.y + dist(dre) * 2;
+		pos.z = std_dev_pos.z + dist(dre) * 2;
 
-		vel.x = std_dev_vel.x + dist(dre) * 10;
+		vel.x = std_dev_vel.x + dist(dre) * 1;
 		vel.y = std_dev_vel.y + dist(dre);
-		vel.z = std_dev_vel.z + dist(dre) * 10;
+		vel.z = std_dev_vel.z + dist(dre) * 1;
 
-		r = rand() % 255 / 255.0f;
-		g = rand() % 255 / 255.0f;
-		b = rand() % 255 / 255.0f;
+		r = 0;
+		g = 0;
+		b = 1;
 
-		Particle* newParticle = new Particle(vel, pos, 0.998f, 1, 2.0f, Vector4(r, g, b, 1));
+		mass = rand() % 10;
+
+		Particle* newParticle = new Particle(vel, pos, 0.998f, mass, 5.0f, Vector4(r, g, b, 1));
 		particles.push_back(newParticle);
 	}
 
@@ -55,21 +57,23 @@ std::list<Particle*> UniformParticleGenerator::generateParticles()
 	std::list<Particle*> particles;
 
 	Vector3 pos, vel;
-	float r, g, b;
+	float r, g, b, mass;
 	for (int i = 0; i < _num_particles; ++i) {
-		pos.x = _pos_width.x + dist(dre) * 10;
-		pos.y = _pos_width.y + dist(dre) * 10;
-		pos.z = _pos_width.z + dist(dre) * 10;
+		pos.x = _pos_width.x + dist(dre) * 2;
+		pos.y = _pos_width.y + dist(dre) * 2;
+		pos.z = _pos_width.z + dist(dre) * 2;
 
-		vel.x = _vel_width.x + dist(dre) * 10;
-		vel.y = _vel_width.y + dist(dre) * 10;
-		vel.z = _vel_width.z + dist(dre) * 10;
+		vel.x = _vel_width.x + dist(dre) * 1;
+		vel.y = _vel_width.y + dist(dre);
+		vel.z = _vel_width.z + dist(dre) * 1;
 
-		r = rand() % 255 / 255.0f;
-		g = rand() % 255 / 255.0f;
-		b = rand() % 255 / 255.0f;
+		r = 0;
+		g = 0;
+		b = 1;
 
-		Particle* newParticle = new Particle(vel, pos, 0.998f, 1, 5.0f, Vector4(r, g, b, 1));
+		mass = rand() % 10;
+
+		Particle* newParticle = new Particle(vel, pos, 0.998f, mass, 5.0f, Vector4(r, g, b, 1));
 		particles.push_back(newParticle);
 	}
 
@@ -123,20 +127,18 @@ std::list<Particle*> FireworkGenerator::generateParticles()
 	Vector3 pos, vel;
 	for (int i = 0; i < _num_particles; ++i) {
 
-		pos.x = _mean_pos.x + dist(dre) * 10;
-		pos.y = _mean_pos.y + dist(dre) * 10;
-		pos.z = _mean_pos.z + dist(dre) * 10;
+		pos.x = _mean_pos.x + dist(dre);
+		pos.y = _mean_pos.y + dist(dre);
+		pos.z = _mean_pos.z + dist(dre);
 
-		vel.x = _mean_vel.x + dist(dre) * 10;
-		vel.y = _mean_vel.y + dist(dre);
-		vel.z = _mean_vel.z + dist(dre) * 10;
-	
-		vel = Vector3(0, 0, 0);
+		vel.x = _mean_vel.x + dist(dre);
+		vel.y = _mean_vel.y + dist(dre) * 2;
+		vel.z = _mean_vel.z + dist(dre);
 
 		r = rand() % 255 / 255.0f;
 		g = rand() % 255 / 255.0f;
 		b = rand() % 255 / 255.0f;
-		fireworks.push_back(new Firework(vel, pos, 0.998f, 1, Firework::CIRCLE, 100.0f, Vector4(r, g, b, 1), 5));
+		fireworks.push_back(new Firework(vel, pos, 0.998f, 1, Firework::RANDOM, 2.0f, Vector4(r, g, b, 1), 5));
 	}
 	return fireworks;
 }
@@ -170,13 +172,13 @@ std::list<Particle*> GaussianRigidGenerator::generateParticles()
 	Vector3 pos, vel;
 	float r, g, b;
 	for (int i = 0; i < _num_particles && currentParticles < maxParticles; ++i) {
-		pos.x = std_dev_pos.x + dist(dre) * 10;
-		pos.y = std_dev_pos.y + dist(dre) * 10;
-		pos.z = std_dev_pos.z + dist(dre) * 10;
+		pos.x = std_dev_pos.x + dist(dre) * 0.5;
+		pos.y = std_dev_pos.y + dist(dre) * 0.5;
+		pos.z = std_dev_pos.z + dist(dre) * 0.5;
 
-		vel.x = std_dev_vel.x + dist(dre) * 10;
+		vel.x = std_dev_vel.x + dist(dre);
 		vel.y = std_dev_vel.y + dist(dre);
-		vel.z = std_dev_vel.z + dist(dre) * 10;
+		vel.z = std_dev_vel.z + dist(dre);
 
 		r = rand() % 255 / 255.0f;
 		g = rand() % 255 / 255.0f;

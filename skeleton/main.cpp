@@ -34,12 +34,12 @@ PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
 
-//ParticleSystem* Psystem = nullptr;
 bool torbellino, wind, gravity;
 
 PxRigidStatic* suelo;
 
-SolidSystem* SolidSys;
+ParticleSystem* Psystem = nullptr;
+SolidSystem* SolidSys = nullptr;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -66,14 +66,14 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 
-	//Psystem = new ParticleSystem(gScene, gPhysics);
+	Psystem = new ParticleSystem(gScene, gPhysics);
 	torbellino = false;
 	wind = false;
 	gravity = false;
 
 	//Suelo (sólido rígido)
 	suelo = gPhysics->createRigidStatic(PxTransform({ 0, 0, 0 }));
-	PxShape* plano = CreateShape(PxBoxGeometry(100, 1, 100));
+	PxShape* plano = CreateShape(PxBoxGeometry(200, 1, 100));
 	suelo->attachShape(*plano);
 	gScene->addActor(*suelo);
 	RenderItem* sueloItem = new RenderItem(plano, suelo, { 1, 1, 0, 1 });
@@ -101,8 +101,10 @@ void stepPhysics(bool interactive, double t)
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
-	//Psystem->update(t);
+	Psystem->update(t);
 	SolidSys->update(t);
+	if (SolidSys->getWin())
+		Psystem->setFireworkGenerator(true);
 }
 
 // Function to clean data
@@ -110,7 +112,7 @@ void stepPhysics(bool interactive, double t)
 void cleanupPhysics(bool interactive)
 {
 	//delete particle;
-	//delete Psystem;
+	delete Psystem;
 	delete SolidSys;
 
 	PX_UNUSED(interactive);

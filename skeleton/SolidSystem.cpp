@@ -20,8 +20,10 @@ void SolidSystem::generateBolos(Vector3 pos)
 	p.push_back(new Bolo(Vector3(0, 0, 0), pos + Vector3(5, 0, 5), 1, physics, scene, 100.0f, Vector4(1, 1, 1, 1), BOX));
 	p.push_back(new Bolo(Vector3(0, 0, 0), pos + Vector3(-5, 0, 5), 1, physics, scene, 100.0f, Vector4(1, 1, 1, 1), BOX));
 
-	for (RigidParticle* rp : p)
+	for (RigidParticle* rp : p) {
 		rp->setBoxSize(1, 5, 1);
+		rp->getRigid()->setMassSpaceInertiaTensor(Vector3(1, 7, 1));
+	}
 
 	bolos.push_back(p);
 }
@@ -39,7 +41,7 @@ void SolidSystem::generateWalls(Vector3 pos)
 	rail1->setBoxSize(5, 1, 50);
 	rail1->setMass(rail1->getVolumen() * 1000);
 	railes.push_back(rail1);
-	BuoyancyForceGenerator* rail1Force = new BuoyancyForceGenerator(rail1, scene->getGravity().magnitude(), Vector3(0, 0, 100));
+	BuoyancyForceGenerator* rail1Force = new BuoyancyForceGenerator(rail1, scene->getGravity().magnitude(), Vector3(0, 0, 1000));
 	ForceRegistry->addRegistry(rail1Force, ball);
 	forces.push_back(rail1Force);
 
@@ -53,34 +55,47 @@ void SolidSystem::generateWalls(Vector3 pos)
 	rail2->setBoxSize(5, 1, 50);
 	rail2->setMass(rail1->getVolumen() * 1000);
 	railes.push_back(rail2);
-	BuoyancyForceGenerator* rail2Force = new BuoyancyForceGenerator(rail2, scene->getGravity().magnitude(), Vector3(0, 0, 100));
+	BuoyancyForceGenerator* rail2Force = new BuoyancyForceGenerator(rail2, scene->getGravity().magnitude(), Vector3(0, 0, 1000));
 	ForceRegistry->addRegistry(rail2Force, ball);
 	forces.push_back(rail2Force);
 }
 
 SolidSystem::SolidSystem(PxScene* s, PxPhysics* p)
 {
-	cameraTrigger = new CameraTrigger(Vector3(0, 0, 0), 20, 50, 20, GetCamera());
+	cameraTrigger = new CameraTrigger(Vector3(0, 0, 0), 20, 20, 20, GetCamera());
+	cameraTrigger2 = new CameraTrigger(Vector3(100, 0, 0), 20, 20, 20, GetCamera());
 	force = 100000;
 	canThrow = true;
+	win = false;
 	ball = new RigidParticle(Vector3(0, 0, 0), Vector3(0, 3, 0), 1, p, s, 1000);
 	ballTrigger = new BallTrigger(Vector3(-5, 0, 70), 30, 50, 20, ball);
+	ballTrigger2 = new BallTrigger(Vector3(95, 0, 70), 30, 50, 20, ball);
 	scene = s;
 	physics = p;
 	ForceRegistry = new ParticleForceRegistry();
+
+	WindGenerator* wg = new WindGenerator(Vector3(100, 0, 30), Vector3(2000, 0, 0), 15, 1, 0);
+	wg->setActive(true);
+	ForceRegistry->addRegistry(wg, ball);
+	forces.push_back(wg);
 
 	callback = new MyCallBacks();
 	scene->setSimulationEventCallback(callback);
 
 	generateBolos(Vector3(10, 6, 50));
 	generateWalls(Vector3(10, 0, 45));
+
+	generateBolos(Vector3(110, 6, 50));
+	generateWalls(Vector3(110, 0, 45));
 }
 
 SolidSystem::~SolidSystem()
 {
 	delete cameraTrigger;
+	delete cameraTrigger2;
 	delete ballTrigger;
-	delete ball;
+	delete ballTrigger2;
+	scene->removeActor(*ball->getRigid());
 	delete ForceRegistry;
 	
 	for (std::vector<Bolo*> v : bolos)
@@ -98,9 +113,11 @@ void SolidSystem::update(double t)
 {
 	ForceRegistry->updateForces(t);
 	cameraTrigger->update();
+	cameraTrigger2->update();
 
 	ballTrigger->update();
-	if (ballTrigger->isInside() || ball->getRigid()->getGlobalPose().p.y < 0) {
+	ballTrigger2->update();
+	if (ballTrigger->isInside() || ballTrigger2->isInside() || ball->getRigid()->getGlobalPose().p.y < 0) {
 		ball->getRigid()->setGlobalPose(PxTransform(Vector3(0, 0, 0)));
 		canThrow = true;
 		ball->getRigid()->setLinearVelocity({ 0, 0, 0 });
@@ -116,9 +133,7 @@ void SolidSystem::update(double t)
 		++i;
 	}
 
-	if (i == bolos.size() && sigue)
-		std::cout << "FIN" << std::endl;
-
+	win = i == bolos.size() && sigue;
 }
 
 void SolidSystem::keyPress(unsigned char key)
@@ -126,7 +141,7 @@ void SolidSystem::keyPress(unsigned char key)
 	switch (toupper(key))
 	{
 	case 'E': {
-		if (cameraTrigger->isInside() && canThrow) {
+		if ((cameraTrigger->isInside() || cameraTrigger2->isInside()) && canThrow) {
 			generateBall();
 		}
 		break;

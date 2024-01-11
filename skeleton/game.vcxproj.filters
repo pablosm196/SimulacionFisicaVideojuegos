@@ -19,7 +19,6 @@
     <ClCompile Include="ParticleForceRegistry.cpp" />
     <ClCompile Include="Trigger.cpp" />
     <ClCompile Include="SolidSystem.cpp" />
-    <ClCompile Include="MyCallBacks.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />

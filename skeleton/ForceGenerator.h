@@ -51,9 +51,10 @@ protected:
 	Vector3 _position, _velocity;
 	float K, radius, timeConst, time;
 public:
-	ExplosionGenerator(Vector3 p, Vector3 v, float force, float t = 1.0f) : _position(p), _velocity(v), K(force), radius(0), timeConst(t), time(0) { active = false; _name = "explosion"; };
+	ExplosionGenerator(Vector3 p, Vector3 v, float force, float r = 5.0f, float t = 1.0f) : _position(p), _velocity(v), K(force), radius(r), timeConst(t), time(0) { active = false; _name = "explosion"; };
 	void updateForce(Particle* p, double t) override;
 	inline void updateTime(double t) { time += t; }
+	inline void setPosition(Vector3 pos) { _position = pos; }
 };
 
 class SpringForceGenerator : public ForceGenerator {

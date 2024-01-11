@@ -257,7 +257,6 @@
     <ClCompile Include="Firework.cpp" />
     <ClCompile Include="ForceGenerator.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MyCallBacks.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleForceRegistry.cpp" />
     <ClCompile Include="ParticleGenerator.cpp" />

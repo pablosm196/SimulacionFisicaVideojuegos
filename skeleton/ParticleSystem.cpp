@@ -107,8 +107,8 @@ ParticleSystem::~ParticleSystem()
 	
 	
 	delete _firework_generator;
-	delete rg;
-	delete water;
+	delete _firework_generator_2;
+	//delete water;
 }
 
 void ParticleSystem::update(double t)
@@ -165,14 +165,6 @@ void ParticleSystem::update(double t)
 				}
 			}
 		}
-		if (rg->getActive()) {
-			std::list<Particle*> l = rg->generateParticles();
-			for (Particle* p : l) {
-				for (ForceGenerator* fg : _forces)
-					ForceRegistry->addRegistry(fg, p);
-				_particles.push_back(p);
-			}
-		}
 	}
 
 	//Generar nuevos fireworks
@@ -190,13 +182,22 @@ ParticleGenerator* ParticleSystem::getParticleGenerator(std::string name)
 void ParticleSystem::generateFireworkSystem()
 {
 	if (_firework_generator->getActive()) {
-			std::list<Particle*> l = _firework_generator->generateParticles();
-			for (Particle* nf : l) {
-				for (ForceGenerator* fg : _forces)
-					ForceRegistry->addRegistry(fg, nf);
-				_fireworks.push_back((Firework*)nf);
-			}
+		std::list<Particle*> l = _firework_generator->generateParticles();
+		for (Particle* nf : l) {
+			for (ForceGenerator* fg : _forces)
+				ForceRegistry->addRegistry(fg, nf);
+			_fireworks.push_back((Firework*)nf);
 		}
+	}
+
+	if (_firework_generator_2->getActive()) {
+		std::list<Particle*> l = _firework_generator_2->generateParticles();
+		for (Particle* nf : l) {
+			for (ForceGenerator* fg : _forces)
+				ForceRegistry->addRegistry(fg, nf);
+			_fireworks.push_back((Firework*)nf);
+		}
+	}
 }
 
 void ParticleSystem::generateExplosion()

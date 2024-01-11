@@ -10,12 +10,12 @@ class SolidSystem
 private:
 	RigidParticle* ball;
 	float force;
-	bool canThrow;
+	bool canThrow, win;
 	std::vector<std::vector<Bolo*>> bolos;
 	std::vector<PxRigidStatic*> walls;
 	std::vector<Particle*> railes;
-	BallTrigger* ballTrigger;
-	CameraTrigger* cameraTrigger;
+	BallTrigger* ballTrigger, *ballTrigger2;
+	CameraTrigger* cameraTrigger, *cameraTrigger2;
 	void generateBall();
 	void generateBolos(Vector3 pos);
 	void generateWalls(Vector3 pos);
@@ -29,5 +29,6 @@ public:
 	~SolidSystem();
 	void update(double t);
 	void keyPress(unsigned char key);
+	inline bool getWin() { return win; }
 };
 

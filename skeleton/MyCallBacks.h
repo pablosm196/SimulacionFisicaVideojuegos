@@ -7,6 +7,8 @@ using namespace physx;
 
 class MyCallBacks : public PxSimulationEventCallback
 {
+	const float minLinearSpeed = 7.0f;
+	const float minAngularSpeed = 7.0f;
 public:
 	//This is called when a breakable constraint breaks.
 	virtual void onConstraintBreak(PxConstraintInfo* constraints, PxU32 count) override {};
@@ -24,17 +26,19 @@ public:
 		RigidParticle* bola = nullptr;
 
 		if (particle1 != nullptr && particle2 != nullptr) {
-			particle1->setTirado();
+			if(particle2->getRigid()->getLinearVelocity().magnitude() > minLinearSpeed || particle2->getRigid()->getAngularVelocity().magnitude() > minAngularSpeed)
+				particle1->setTirado();
+			if(particle1->getRigid()->getLinearVelocity().magnitude() > minLinearSpeed || particle1->getRigid()->getAngularVelocity().magnitude() > minAngularSpeed)
 			particle2->setTirado();
 		}
 		else if (particle1 == nullptr) {
 			bola = (RigidParticle*)ac1->userData;
-			if (bola != nullptr)
+			if (bola != nullptr && bola->getRigid()->getLinearVelocity().magnitude() > minLinearSpeed)
 				particle2->setTirado();
 		}
 		else if (particle2 == nullptr) {
 			bola = (RigidParticle*)ac2->userData;
-			if (bola != nullptr)
+			if (bola != nullptr && bola->getRigid()->getLinearVelocity().magnitude() > minLinearSpeed)
 				particle1->setTirado();
 		}
 	}

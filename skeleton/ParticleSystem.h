@@ -8,7 +8,7 @@
 class ParticleSystem
 {
 	const float NEW_PARTICLE_TIME = 0.1f;
-	const float NEW_FIREWORK_TIME = 3.0f;
+	const float NEW_FIREWORK_TIME = 1.0f;
 private:
 	std::list<Particle*> _particles;
 	std::list<Firework*> _fireworks;
@@ -16,7 +16,7 @@ private:
 	std::list<ForceGenerator*> _forces;
 	std::list<ForceGenerator*> _forcesSpring;
 	FireworkGenerator* _firework_generator;
-	GaussianRigidGenerator* rg;
+	FireworkGenerator* _firework_generator_2;
 
 	float newParticle, time, newFirework, timeFirework;
 
@@ -26,18 +26,21 @@ private:
 	void generateSpringDemo();
 public:
 	ParticleSystem(PxScene* s, PxPhysics* p) : _particles(0), _particle_generators(0), newParticle(0.0f), time(0.0f), timeFirework(0.0f), newFirework(0.0f){
-		/*UniformParticleGenerator* ug = new UniformParticleGenerator(Vector3(0, 0, 0), Vector3(0, 10, 0), 5);
+		UniformParticleGenerator* ug = new UniformParticleGenerator(Vector3(21, 40, 0), Vector3(0, 0, 0), 5);
 		_particle_generators.push_back(ug);
-		GaussianParticleGenerator* gg = new GaussianParticleGenerator(Vector3(0, 0, 0), Vector3(0, 0, 0), 1, 1);
-		_particle_generators.push_back(gg);*/
-		_firework_generator = new FireworkGenerator(Vector3(0, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 0), 1);
-		rg = new GaussianRigidGenerator(Vector3(0, 15, 0), Vector3(0, 10, 0), 1, 1, 100, p, s);
-		rg->setActive(true);
+		GaussianParticleGenerator* gg = new GaussianParticleGenerator(Vector3(-1, 40, 0), Vector3(0, 0, 0), 1, 5);
+		ug->setActive(true);
+		gg->setActive(true);
+		_particle_generators.push_back(gg);
+		_firework_generator = new FireworkGenerator(Vector3(10, 5, 50), Vector3(0, 50, 0), Vector3(0, 0, 0), 5);
+		_firework_generator_2 = new FireworkGenerator(Vector3(110, 5, 50), Vector3(0, 50, 0), Vector3(0, 0, 0), 5);
+
 
 		ForceRegistry = new ParticleForceRegistry();
 
 		GravityForceGenerator* Gravity = new GravityForceGenerator(Vector3(0, -9.8, 0));
 		_forces.push_back(Gravity);
+		Gravity->setActive(true);
 		TorbellinoGenerator* Torbellino = new TorbellinoGenerator(Vector3(0, 0, 0), Vector3(10, 0, 0), 20, 5, 4);
 		_forces.push_back(Torbellino);
 		WindGenerator* Wind = new WindGenerator(Vector3(0, 0, 0), Vector3(0, 0, 100), 100.0f, 1.0f);
@@ -56,7 +59,6 @@ public:
 	void setTorbellino(bool t);
 	void setWind(bool w);
 	//inline void setKMuelle(float k) { muelle->setK(k); }
-	inline void setFireworkGenerator(bool active) { _firework_generator->setActive(active); }
-	inline void setRigidGenerator(bool active) { rg->setActive(active); }
+	inline void setFireworkGenerator(bool active) { _firework_generator->setActive(active); _firework_generator_2->setActive(true); }
 };
 

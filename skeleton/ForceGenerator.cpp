@@ -15,7 +15,7 @@ void WindGenerator::updateForce(Particle* p, double t)
 		if (p->getMass() < 1e-10)
 			return;
 
-		if(p->getPos().x < _position.x + radius && p->getPos().y < _position.y + radius && p->getPos().z < _position.z + radius)
+		if(p->getPos().x > _position.x && p->getPos().x < _position.x + radius && p->getPos().y > _position.y && p->getPos().y < _position.y + radius && p->getPos().z > _position.z && p->getPos().z < _position.z + radius)
 			p->addForce(k1 * (_windVelocity - p->getVel()) + k2 * (_windVelocity - p->getVel()).magnitude() * (_windVelocity - p->getVel()));
 	}
 }
@@ -38,7 +38,7 @@ void ExplosionGenerator::updateForce(Particle* p, double t)
 			return;
 
 		if (time < 4 * timeConst) {
-			radius = _velocity.magnitude() * time;
+			//radius = _velocity.magnitude() * time;
 
 			float r = sqrt(powf(p->getPos().x - _position.x, 2) + powf(p->getPos().y - _position.y, 2) + powf(p->getPos().x - _position.x, 2));
 
@@ -79,19 +79,21 @@ BuoyancyForceGenerator::BuoyancyForceGenerator(Particle* l, float g, Vector3 cor
 
 void BuoyancyForceGenerator::updateForce(Particle* p, double t)
 {
-	float h = p->getPos().y;
-	float h0 = liquid->getPos().y;
-	float height = p->getHeight();
-	float immersed;
-	float densityO = (float) p->getMass() / p->getVolumen();
+	if (p->getPos().x >= liquid->getPos().x && p->getPos().x <= liquid->getPos().x + liquid->getSize().x && p->getPos().z >= liquid->getPos().z && p->getPos().z <= liquid->getPos().z + liquid->getSize().z) {
+		float h = p->getPos().y;
+		float h0 = liquid->getPos().y;
+		float height = p->getHeight();
+		float immersed;
+		float densityO = (float) p->getMass() / p->getVolumen();
 
-	if (h - height * .5 > h0)
-		return;
-	else if (h0 > h + p->getHeight() * 0.5)
-		immersed = 1.0f;
-	else
-		immersed = (h0 - h) / p->getHeight() + 0.5;
+		if (h - height * .5 > h0)
+			return;
+		else if (h0 > h + p->getHeight() * 0.5)
+			immersed = 1.0f;
+		else
+			immersed = (h0 - h) / p->getHeight() + 0.5;
 
-	if(densityO < density)
-		p->addForce(Vector3(0, density * p->getVolumen() * immersed * gravity, 0) + current);
+		if(densityO < density)
+			p->addForce(Vector3(0, density * p->getVolumen() * immersed * gravity, 0) + current);
+	}
 }

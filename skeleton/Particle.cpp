@@ -30,6 +30,7 @@ Particle::Particle(Vector3 v, Vector3 p, float m, float d, float t, Vector4 col,
 		renderItem = new RenderItem(CreateShape(PxBoxGeometry(1, 1, 1)), &pose, color);
 
 	force = Vector3(0, 0, 0);
+	size = Vector3(1, 1, 1);
 }
 
 Particle::~Particle()
@@ -84,6 +85,7 @@ void Particle::setBoxSize(float w, float h, float l)
 	shape = BOX;
 	renderItem->shape->release();
 	renderItem->shape->setGeometry(PxBoxGeometry(w, h, l));
+	size = Vector3(w, h, l);
 }
 
 void Particle::setSphereRadius(float r)
@@ -91,6 +93,7 @@ void Particle::setSphereRadius(float r)
 	shape = SPHERE;
 	renderItem->shape->release();
 	renderItem->shape->setGeometry(PxSphereGeometry(r));
+	size = Vector3(r, r, r);
 }
 
 RigidParticle::RigidParticle(Vector3 linear_v, Vector3 p, float m, PxPhysics* physics, PxScene* px_scene, float t, Vector4 col, Shape s, Vector3 angular_v) : Particle(linear_v, p, 0.998f, m, t, col, s)
@@ -140,4 +143,5 @@ void RigidParticle::setBoxSize(float w, float h, float l)
 	Pshape = CreateShape(PxBoxGeometry(w, h, l));
 	rigid->attachShape(*Pshape);
 	renderItem->shape = Pshape;
+	size = Vector3(w, h, l);
 }
